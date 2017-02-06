@@ -1,0 +1,179 @@
+@import 'react-select';
+@import 'wallop';
+
+.logo_content{
+  display: flex;
+  height: inherit;
+}
+
+.img_logo{
+  height: 4em;
+}
+
+#search{
+  margin: 1em;
+}
+
+#BasemapToggle{
+  display: block;
+  position: absolute;
+  z-index: 1;
+  bottom: 2em;
+  right: 1em;
+}
+
+.factigisVE_Header{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.factigisVE_Header_leftside{
+  display: flex;
+}
+
+.factigisVE_tabText{
+  font-family: sans-serif;
+  font-size: smaller;
+  letter-spacing: 1px;
+}
+.factigisVE_btnAyuda{
+  margin: 1em;
+  color: white !important;
+}
+
+
+.factigisVE_progressBar{
+  display: none;
+}
+
+.factigisVE_content{
+  display: flex;
+flex-direction: row;
+height: 100%;
+}
+
+.factigisVE_menuIzquierdo{
+  width: 35%;
+  position: absolute;
+  height: 91.6%;
+  background-color: ghostwhite;
+}
+
+.factigisVE_menuDerecho{
+  width: 65%;
+  position: absolute;
+  height: 91.6%;
+  right: 0;
+}
+
+.factigisVE_map_div{
+  height: 100%;
+}
+
+.factigisVE_pasoDivTitle{
+  display: flex;
+  margin: 1em;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+}
+
+.factigisVE_paso{
+  margin: 0 1em 0 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 93%;
+      font-size: 12px;
+}
+
+.factigisVE_paso_title{
+  font-size: 14px;
+}
+
+.factigisVE_imgLoader{
+  height: 0.8em;
+ width: 1em;
+ display: none;
+ margin-right: 1em;
+}
+
+.factigisVE_textfield{
+  width: 70%;
+}
+
+.factigisVE_pasoDiv{
+  border: #c78f8f dashed 1px;
+  margin: 0.5em;
+}
+
+.factigisVE_select{
+  width: 100%;
+  margin: 0.5em;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.factigisVE_paso4{
+  flex-direction: column;
+}
+
+.factigisVE_radios{
+  display: flex;
+width: 100%;
+justify-content: space-around;
+}
+
+.factigisVE_buttonsDiv{
+  display: flex;
+justify-content: space-around;
+margin: 0.5em;
+}
+
+.theme__raised___ww2KJ{
+  width: 40%;
+}
+
+.paso2{
+  display: none;
+}
+.paso3{
+  display: none;
+}
+.paso4{
+  display: none;
+}
+
+.factigisVE_btnPaso1, .factigisVE_btnPaso2, .factigisVE_btnPaso3{
+  color:black;
+}
+
+.theme__disabled___38tOH>.theme__inputElement___2akQt{
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.factigisVE_textfield{
+  width: 100%;
+  margin-bottom: 0.5em;
+}
+
+
+
+.direccionexTexfield{
+  margin-bottom: 0;
+}
+
+.direccionesPaso2, .direccionesPaso3, .direccionesPaso4, .direccionesPaso5{
+  display: none;
+}
+
+.factigisVEDir_btnPaso1, .factigisVE_btnPaso2{
+  color:black;
+}
+
+.divPotencias{
+  width: 100%;
+}
