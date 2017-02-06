@@ -327,6 +327,7 @@ function agregarEstadoHistoria(historial,callback){
 
     .done(d =>{
       let json = JSON.parse(d);
+      console.log(d);
       console.log(json["addResults"][0].objectId);
       let arrObject = [];
       if(json["addResults"][0].objectId>0){
@@ -448,7 +449,7 @@ function agregarFact(f, callback){
   })
   .done(d =>{
     let json = JSON.parse(d);
-
+    console.log(d);
     let arrObject = [];
 
     if(json["addResults"][0].objectId>0){
@@ -579,7 +580,7 @@ function agregarFactEspecial(f, callback){
   })
   .done(d =>{
     let json = JSON.parse(d);
-
+    console.log(d);
     let arrObject = [];
 
     if(json["addResults"][0].objectId>0){

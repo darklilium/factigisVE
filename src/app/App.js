@@ -648,6 +648,7 @@ class App extends React.Component {
                     boFactibilidad = 2;
                   }
 
+
                   window.location='http://ventaservicios.pruebas/online/getParametros.php?id_factibilidad='+
                         cb[1] +
                         '&bo_factibilidad=' +
@@ -670,6 +671,7 @@ class App extends React.Component {
                         cb[2]['Tipo_empalme'];
 
                     window.close();
+
               //si no fue grabado mostrar que hubo problemas en modal
               }else{
                 /*this.setState({
@@ -824,6 +826,7 @@ class App extends React.Component {
                              cb[2]['Tipo_empalme'];
 
                          window.close();
+
                       //si no fue grabado mostrar que hubo problemas en modal
                   }else{
                     //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
