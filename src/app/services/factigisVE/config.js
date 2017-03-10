@@ -11,9 +11,9 @@
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
-  ROUTEPATH: '/AP',
+  ROUTEPATH: '/factigisTesting',
   ENVIRONMENT: 'PRODUCTION',
-  WEBSERVERADDRESS: "http://gisred.chilquinta/AP/",
+  WEBSERVERADDRESS: "http://gisred.chilquinta/factigisTesting/",
   SAVEAPPLICATIONMODULE: "FACTIGIS_DESA",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_DESA'
 }
