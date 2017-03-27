@@ -734,7 +734,7 @@ class App extends React.Component {
 
                 //no agregar
                 console.log("No agregar porque está dentro de zona transmisión y fuera de concesión");
-                this.setState({snackbarMessage: "Estimado cliente, su factibilidad no se puede agregar porque está fuera de nuestra zona de concesión. Para una atención personalizada, diríjase a nuestra oficina de atención de clientes.", activeSnackbar: true, snackbarIcon: 'error' });
+                this.setState({snackbarMessage: "Estimado cliente, su solicitud no puede ser ingresada porque se encuentra fuera de nuestra zona de concesión. Contáctese con un ejecutivo en nuestras oficinas comerciales", activeSnackbar: true, snackbarIcon: 'error' });
                  $(".factigisVE_progressBar").css('display','none');
                 /*this.setState({
                   open: true,
