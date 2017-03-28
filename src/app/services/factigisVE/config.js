@@ -8,12 +8,17 @@
   SAVEAPPLICATIONNAME: 'REACT_AP_WEB_DESA'
 }
 */
+
+/*factigisVE  : v0.6.1
+Author: Evelyn Hernandez
+*/
+
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
   ROUTEPATH: '/factigisVE',
   ENVIRONMENT: 'PRODUCTION',
-  WEBSERVERADDRESS: "http://gisred.chilquinta/factigisTesting/",
+  WEBSERVERADDRESS: "http://gisred.chilquinta.cl:5555/factigisVE/",
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD'
 }

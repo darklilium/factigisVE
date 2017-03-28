@@ -1191,7 +1191,7 @@ class App extends React.Component {
   }
 
   onClickAyuda(){
-    var url = "http://gisred.chilquinta/factigisVE/ayuda/ayuda.html"
+    var url = "http://gisred.chilquinta.cl:5555/factigisVE/ayuda/ayuda.html"
     window.open(url, "nuevo", "directories=no, location=no, menubar=no, scrollbars=yes, statusbar=no, tittlebar=no");
   }
 
