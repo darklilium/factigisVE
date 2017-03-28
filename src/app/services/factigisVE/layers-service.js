@@ -14,9 +14,9 @@ function getMapLayers() {
 }
 
 function myLayers(){
-  const serviceMain = 'http://gisred.chilquinta/arcgis/';
+  //const serviceMain = 'http://gisred.chilquinta/arcgis/';
   //change this for external connection:
-  //const serviceMain = 'http://gisred.chilquinta.cl:5555/arcgis/';
+  const serviceMain = 'http://gisred.chilquinta.cl:5555/arcgis/';
   const serviceURL = serviceMain + 'rest/services/';
   //var graphicLayer = new GraphicsLayer;
 
