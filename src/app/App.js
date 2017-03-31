@@ -202,8 +202,8 @@ class App extends React.Component {
           }, "search");
         search.startup();
 
-        const page = "REACT_FACTIGIS_DESA";
-        const module = "FACTIGIS_CREAR_FACTIBILIDAD";
+        const page = "REACT_FACTIGISVE_PROD";
+        const module = "FACTIGISVE_CREAR_FACTIBILIDAD";
         const date = getFormatedDate();
         const user = cookieHandler.get('usrprfl')
         const myToken = cookieHandler.get('tkn');
@@ -649,7 +649,7 @@ class App extends React.Component {
                   }
 
 
-                  window.location='http://ventaservicios.pruebas/online/getParametros.php?id_factibilidad='+
+                  window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
                         cb[1] +
                         '&bo_factibilidad=' +
                         boFactibilidad +
@@ -804,7 +804,7 @@ class App extends React.Component {
                          boFactibilidad = 2;
                        }
 
-                       window.location='http://ventaservicios.pruebas/online/getParametros.php?id_factibilidad='+
+                       window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
                              cb[1] +
                              '&bo_factibilidad=' +
                              boFactibilidad +
