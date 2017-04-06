@@ -1,4 +1,4 @@
-/*const env = {
+const env = {
   ROOT: "dist/css/",
   CSSDIRECTORY: 'dist/css/',
   ROUTEPATH: '/',
@@ -7,12 +7,12 @@
   SAVEAPPLICATIONMODULE: "FACTIGIS_DESA",
   SAVEAPPLICATIONNAME: 'REACT_AP_WEB_DESA'
 }
-*/
 
-/*factigisVE  : v0.6.1
+
+/*factigisVE  : v0.6.2
 Author: Evelyn Hernandez
 */
-
+/*
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
@@ -22,6 +22,6 @@ const env = {
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD'
 }
-
+*/
 
 export default env;

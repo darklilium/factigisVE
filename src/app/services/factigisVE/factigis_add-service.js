@@ -149,6 +149,14 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
                   factibilidad.factigisTipoFactibilidad = "FACTIBILIDAD ASISTIDA";
                 }
 
+                //06.04.2017: Req: #6 •	Agregar nueva regla a los estudios dentro de la zona de concesión, es decir, a las reglas originales que finalizan en
+                  //factibilidad directa o asistida agregar la regla de los 50 metros para que el resultado sea asistido.
+                console.log(factibilidad.factigisDistRotMed,"tengo esta distancia");
+                if(factibilidad.factigisDistRotMed > 50){
+                  console.log("distancia rotulo medidor > 50", factibilidad.factigisDistRotMed);
+                    factibilidad.factigisTipoFactibilidad = "FACTIBILIDAD ASISTIDA";
+                }
+
         //agregar a rest srv
 
                 console.log("Estoy con la siguiente factibilidad en bt",factibilidad.factigisTipoFactibilidad);
@@ -258,6 +266,14 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
             factibilidad.factigisTipoFactibilidad = "FACTIBILIDAD ASISTIDA";
          }
 
+         //06.04.2017: Req: #6 •	Agregar nueva regla a los estudios dentro de la zona de concesión, es decir, a las reglas originales que finalizan en
+           //factibilidad directa o asistida agregar la regla de los 50 metros para que el resultado sea asistido.
+         console.log(factibilidad.factigisDistRotMed,"tengo esta distancia");
+         if(factibilidad.factigisDistRotMed > 50){
+           console.log("distancia rotulo medidor > 50", factibilidad.factigisDistRotMed);
+             factibilidad.factigisTipoFactibilidad = "FACTIBILIDAD ASISTIDA";
+         }
+         
         //Si luego de todos los cambios, la factibilidad sigue siendo DIRECTA, el tipo de mejora también es directa.
           if(factibilidad.factigisTipoFactibilidad=="FACTIBILIDAD DIRECTA"){
             factibilidad.factigisTipoMejora = "FACTIBILIDAD DIRECTA";
