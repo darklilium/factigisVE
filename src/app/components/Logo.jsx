@@ -5,7 +5,6 @@ import { Button } from 'react-toolbox/lib/button'; // Bundled component import
 import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox';
 import { AppBar, Checkbox, IconButton } from 'react-toolbox';
 import {Router, Route, browserHistory} from "react-router";
-import {TabsExample} from './Tabs.jsx';
 import {Link} from "react-router";
 import env from '../services/factigisVE/config';
 
