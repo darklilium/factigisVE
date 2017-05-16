@@ -17,10 +17,20 @@ function myLayers(){
   //const serviceMain = 'http://gisred.chilquinta/arcgis/';
   //change this for external connection:
   //Cambios v0.6.1 prod factigisVE 31.03.2017
-  const serviceMain = 'http://gisred.chilquinta.cl:5555/arcgis/';
-  const serviceURL = serviceMain + 'rest/services/';
+  //const serviceMain = 'http://gisred.chilquinta.cl:5555/arcgis/';
+  //const serviceURL = serviceMain + 'rest/services/';
   //var graphicLayer = new GraphicsLayer;
 
+  var serviceMain;
+  var serviceURL;
+  
+  if(env.BUILDFOR=="INTERNA"){
+    serviceMain = 'http://gisred.chilquinta/arcgis/';
+  }else{
+    serviceMain = 'http://gisred.chilquinta.cl:5555/arcgis/';
+
+  }
+   serviceURL = serviceMain + 'rest/services/';
   //check 8 and last one
   return {
 
