@@ -890,10 +890,17 @@ class App extends React.Component {
     switch (e.currentTarget.id) {
       case 'factigis_txtPotencia':
           if(!this.state.potencia==''){
+            if(this.state.potencia>0){
+              this.setState({factigistxtPotenciaValidator: true});
+            }else{
+              this.setState({potencia: Math.abs(this.state.potencia)});
+              this.setState({factigistxtPotenciaValidator: true});
+            }
             ////console.log("si factigis_cantidadEmpalmes",this.state.factigisCantidadEmpalmes);
-            this.setState({factigistxtPotenciaValidator: true});
+
           }else{
             ////console.log("no factigis_cantidadEmpalmes",this.state.factigisCantidadEmpalmes);
+            this.setState({potencia: 0});
             this.setState({factigistxtPotenciaValidator: false});
           }
         break;
@@ -1491,8 +1498,13 @@ class App extends React.Component {
                   </div>
 
                   <div className="divPotencias" style={this.state.visibilityStyle.txtPotencia}>
-                    <Input disabled={false} className="factigisVE_textfield factigisPotencia2" type='number' label='Potencia solicitada'
-                     name='potencia' value={this.state.potencia}  onChange={this.onChangePot2.bind(this)}  onBlur={this.onBlur.bind(this)} id="factigis_txtPotencia"/>
+                    <Input disabled={false}
+                      className="factigisVE_textfield factigisPotencia2"
+                      type='number' label='Potencia solicitada'
+                      name='potencia' value={this.state.potencia}
+                      onChange={this.onChangePot2.bind(this)}
+                      onBlur={this.onBlur.bind(this)}
+                      id="factigis_txtPotencia"/>
                   </div>
 
                  <div className="factigisVE_radios">

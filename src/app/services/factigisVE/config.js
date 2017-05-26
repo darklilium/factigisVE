@@ -20,7 +20,7 @@ Author: Evelyn Hernandez
 
 //bUILD EXTERNA PROD
 
-const env = {
+/*const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
   ROUTEPATH: '/factigisVE',
@@ -30,19 +30,19 @@ const env = {
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD',
   BUILDFOR: 'EXTERNA'
 }
-
+*/
 //bUILD INTERNA PROD
-/*
+
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
-  ROUTEPATH: '/factigisVE',
+  ROUTEPATH: 'pruebasfactigis/factigisVE',
   ENVIRONMENT: 'PRODUCTION',
-  WEBSERVERADDRESS: "http://gisred.chilquinta/factigisVE/",
+  WEBSERVERADDRESS: "http://gisred.chilquinta/pruebasfactigis/factigisVE/",
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD',
   BUILDFOR: 'INTERNA'
 }
-*/
+
 
 export default env;
