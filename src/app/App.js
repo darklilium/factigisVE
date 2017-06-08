@@ -648,8 +648,8 @@ class App extends React.Component {
                     boFactibilidad = 2;
                   }
 
-
-                  window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
+                  let web = env.WPHP;
+                  window.location= web + '?id_factibilidad='+
                         cb[1] +
                         '&bo_factibilidad=' +
                         boFactibilidad +
@@ -804,7 +804,10 @@ class App extends React.Component {
                          boFactibilidad = 2;
                        }
 
-                       window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
+                       let web = env.WPHP; 
+                       window.location= web + '?id_factibilidad='+
+
+                       //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
                              cb[1] +
                              '&bo_factibilidad=' +
                              boFactibilidad +

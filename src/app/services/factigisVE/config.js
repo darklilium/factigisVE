@@ -20,7 +20,7 @@ Author: Evelyn Hernandez
 
 //bUILD EXTERNA PROD
 
-/*const env = {
+const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
   ROUTEPATH: '/factigisVE',
@@ -28,11 +28,12 @@ Author: Evelyn Hernandez
   WEBSERVERADDRESS: "http://gisred.chilquinta.cl:5555/factigisVE/",
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD',
-  BUILDFOR: 'EXTERNA'
+  BUILDFOR: 'EXTERNA',
+  WPHP: "http://ventasbeta.chilquinta.cl/online/getParametros.php"
 }
-*/
-//bUILD INTERNA PROD
 
+//bUILD INTERNA PROD
+/*
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
@@ -43,6 +44,6 @@ const env = {
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD',
   BUILDFOR: 'INTERNA'
 }
-
+*/
 
 export default env;
