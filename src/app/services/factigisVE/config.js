@@ -29,6 +29,7 @@ const env = {
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD',
   BUILDFOR: 'EXTERNA',
+  ROOT2: "http://ventasbeta.chilquinta.cl/factigisVE/",
   WPHP: "http://ventasbeta.chilquinta.cl/online/getParametros.php"
 }
 

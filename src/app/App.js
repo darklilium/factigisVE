@@ -804,7 +804,7 @@ class App extends React.Component {
                          boFactibilidad = 2;
                        }
 
-                       let web = env.WPHP; 
+                       let web = env.WPHP;
                        window.location= web + '?id_factibilidad='+
 
                        //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
@@ -1201,7 +1201,7 @@ class App extends React.Component {
   }
 
   onClickAyuda(){
-    var url = env.WEBSERVERADDRESS+"ayuda/ayuda.html"
+    var url = env.ROOT2+"ayuda/ayuda.html"
     window.open(url, "nuevo", "directories=no, location=no, menubar=no, scrollbars=yes, statusbar=no, tittlebar=no");
   }
 
