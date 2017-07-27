@@ -1,4 +1,5 @@
 //bUILD LOCAL DESA
+
 /*
 const env = {
   ROOT: "dist/css/",
@@ -13,8 +14,8 @@ const env = {
 
 
 /*
-Compilate: 24.04.2017
-factigisVE  : v0.6.3
+Compilate: 27.07.2017
+factigisVE  : v0.6.6
 Author: Evelyn Hernandez
 */
 
@@ -29,8 +30,8 @@ const env = {
   SAVEAPPLICATIONMODULE: "FACTIGIS_PROD",
   SAVEAPPLICATIONNAME: 'REACT_FACTIGISVE_PROD',
   BUILDFOR: 'EXTERNA',
-  ROOT2: "http://ventasbeta.chilquinta.cl/factigisVE/",
-  WPHP: "http://ventasbeta.chilquinta.cl/online/getParametros.php"
+  ROOT2: "http://ventaservicios.chilquinta.cl/factigisVE/",
+  WPHP: "http://ventaservicios.chilquinta.cl/online/getParametros.php"
 }
 
 //bUILD INTERNA PROD

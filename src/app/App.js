@@ -274,7 +274,15 @@ class App extends React.Component {
   }
 
   handleChange = (name, value) => {
-   this.setState({...this.state, [name]: value});
+
+    if(name=="crearDireccion_nombreCalle"){
+      if(value.length){
+            $('.direccionesPaso2').css('display','block');
+      }else{
+          $('.direccionesPaso2').css('display','none');
+      }
+    }
+   this.setState({...this.state, [name]: value.toUpperCase()});
 
   };
 
@@ -1322,7 +1330,11 @@ class App extends React.Component {
         console.log(cb,"encontrados", falseEncontrados);
         if(cb){
           console.log("sigue");
-          mapp.removeLayer(mapp.getLayer("gis_chqbasemap"));
+
+          if(mapp.getLayer("gis_chqbasemap")){
+            mapp.removeLayer(mapp.getLayer("gis_chqbasemap"));
+          }
+
           //agregar la dirección:
           factigis_addNuevaDireccion(objNewAddress, objGeometry, (callback)=>{
             if(callback){
@@ -1350,7 +1362,10 @@ class App extends React.Component {
           console.log("ahora", falseEncontrados);
           if(!falseEncontrados.length){
             console.log("sigueeee");
-            mapp.removeLayer(mapp.getLayer("gis_chqbasemap"));
+            if(mapp.getLayer("gis_chqbasemap")){
+              mapp.removeLayer(mapp.getLayer("gis_chqbasemap"));
+            }
+
             //agregar la dirección:
             factigis_addNuevaDireccion(objNewAddress, objGeometry, (callback)=>{
               if(callback){
@@ -1379,6 +1394,8 @@ class App extends React.Component {
   }
 
   onLimpiarDireccion(){
+    var mapp = mymap.getMap();
+
     this.setState({
       crearDireccion_calle_disabled: false,
       btnSelectCalle: '',
@@ -1391,13 +1408,20 @@ class App extends React.Component {
       crearDireccion_anexo2: ''
 
     });
-
+    $(".factigisVE_progressBar").css('display','none');
     $('.direccionesPaso2').css('display','none');
     $('.direccionesPaso3').css('display','none');
     $('.direccionesPaso4').css('display','none');
     $('.direccionesPaso5').css('display','none');
     gLayerUbicacionCasa.clear();
-    mapp.removeLayer(mapp.getLayer("gis_chqbasemap"));
+    if(mapp.getLayer("gis_chqbasemap")){
+      mapp.removeLayer(mapp.getLayer("gis_chqbasemap"));
+    }
+
+    dojo.disconnect(this.state.btnSelectCalle);
+
+    $(".factigisVEDir_btnPaso1").css('color','black');
+
   }
 
   onChangePot2(e){

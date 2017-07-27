@@ -3,7 +3,7 @@ function makeSymbol(){
     makePoint(){
       var mySymbol = new esri.symbol.SimpleMarkerSymbol(
         esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE,
-        20,
+        15,
         new esri.symbol.SimpleLineSymbol(
           esri.symbol.SimpleLineSymbol.STYLE_SOLID,
           new esri.Color([0, 40, 255, 0.9]),
@@ -17,7 +17,7 @@ function makeSymbol(){
     makePointRelated(){
       var mySymbol = new esri.symbol.SimpleMarkerSymbol(
         esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE,
-        20,
+        15,
         new esri.symbol.SimpleLineSymbol(
           esri.symbol.SimpleLineSymbol.STYLE_SOLID,
           new esri.Color([31, 255, 255, 0.6]),
@@ -55,7 +55,7 @@ function makeSymbol(){
     makePointCustomer(){
       var mySymbol = new esri.symbol.SimpleMarkerSymbol(
         esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE,
-        20,
+        15,
         new esri.symbol.SimpleLineSymbol(
           esri.symbol.SimpleLineSymbol.STYLE_SOLID,
           new esri.Color([0, 14, 156, 5]),
@@ -69,7 +69,7 @@ function makeSymbol(){
     makePointPipe(){
       var mySymbol = new esri.symbol.SimpleMarkerSymbol(
         esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE,
-        20,
+        15,
         new esri.symbol.SimpleLineSymbol(
           esri.symbol.SimpleLineSymbol.STYLE_SOLID,
           new esri.Color([156, 0, 0, 5]),
@@ -83,7 +83,7 @@ function makeSymbol(){
     makePointAddress(){
       var mySymbol = new esri.symbol.SimpleMarkerSymbol(
         esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE,
-        20,
+        15,
         new esri.symbol.SimpleLineSymbol(
           esri.symbol.SimpleLineSymbol.STYLE_SOLID,
           new esri.Color([152, 0, 156, 1]),
