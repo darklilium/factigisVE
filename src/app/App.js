@@ -191,6 +191,15 @@ class App extends React.Component {
         layerRotulos.setLayerDefinitions(layerDefs);
         mapp.addLayer(layerRotulos,2);
 
+
+        //add layer for net.
+        var layerTramos = new esri.layers.ArcGISDynamicMapServiceLayer(layers.read_chqTramos(),{id:"factigis_tramos",
+        "opacity" : 0.5});
+        layerTramos.setImageFormat("png32");
+        layerTramos.setVisibleLayers([0,1]);
+
+        mapp.addLayer(layerTramos,3);
+
         var toggle = new BasemapToggle({
           map: mapp,
           basemap: "hybrid"
@@ -441,7 +450,7 @@ class App extends React.Component {
 
   onClickMedidor(e){
 
-    console.log(this.state);
+
     var mapp = mymap.getMap();
     gLayerMedidor.clear();
     $(".factigisVE_progressBar").css('display','flex');
@@ -458,7 +467,7 @@ class App extends React.Component {
      this.setState({factigisVE_geoCliente: g.mapPoint, factigis_geoUbicacionValidator:true});
 
      factigis_findComuna(g.mapPoint, (cb)=>{
-       if(!cb[0]){
+       if(!cb.length){
          console.log("comuna no encontrada");
          this.setState({btnClienteDisabled: false, factigis_geoUbicacionValidator: false});
          dojo.disconnect(this.state.btnCliente);
@@ -473,8 +482,7 @@ class App extends React.Component {
        //validar factibilidad.
        factigis_validator(g.mapPoint, (callbackMain)=>{
          this.setState({
-
-           comuna: cb[0].attributes.nombre,
+           comuna: comunaa,
            zona: zona,
            zonaConcesion: callbackMain.zonaConcesion,
            zonaCampamentos: callbackMain.zonaCampamentos,
@@ -520,12 +528,15 @@ class App extends React.Component {
 
   onClickAgregarCliente(){
     $(".factigisVE_progressBar").css('display','flex');
-    console.log(this.state);
+
     //$("#iframeloadingAdd").show();
     let tipoProvisorioDefinitivo = 'DEFINITIVO';
     if(this.state.radioEmpalmeProvisorio){
       tipoProvisorioDefinitivo="PROVISORIO";
     }
+
+
+
 
     let txtValidators = {
       rut: this.state.factigisRutValidator,
@@ -559,6 +570,10 @@ class App extends React.Component {
 
         let factArr = [];
         //datos a mostrar en modal para indicar que existen problemas de factibilidad en ciertas zonas.
+        //v0.7 - 7-8-2017: agregar restriccion para campamentos
+        if(this.state.zonaCampamentos==false){
+          factArr.push("campamentos");
+        }
 
         if(this.state.zonaConcesion==false){
           factArr.push("concesion");
@@ -570,6 +585,7 @@ class App extends React.Component {
 
         //Si no hay problemas de zonas, pasa a factibilidad NORMAL (directa), transitoriamente ya que esto puede cambiar dentro de la función de guardado.
         //FACTIBILIDAD NORMAL
+        console.log("arreglo", factArr);
         if(!factArr.length){
           //primeros campos a definir para agregar (se agregan más luego en la otra función addNuevaFactibilidad)
           var myFact = {
@@ -643,42 +659,46 @@ class App extends React.Component {
                     //this.render(); //renderizar el componente
                     window.open("factigisCarta.html");
                   */
-                  console.log(cb, "devolviendo esto para venta empalme");
-                  console.log("----------");
-                  console.log("id:",cb[1], "tipo fact:", cb[2]['Tipo_factibilidad'], "rotulo:",cb[2]['Rotulo'], "y más...");
-                  console.log("----------");
 
-                  var boFactibilidad=0;
+                  if(env.ENVIRONMENT=='PRODUCTION'){
+                    console.log(cb, "devolviendo esto para venta empalme");
+                    console.log("----------");
+                    console.log("id:",cb[1], "tipo fact:", cb[2]['Tipo_factibilidad'], "rotulo:",cb[2]['Rotulo'], "y más...");
+                    console.log("----------");
 
-                  if(cb[2]['Tipo_factibilidad']=="FACTIBILIDAD DIRECTA"){
-                    boFactibilidad = 1;
-                  }else{
-                    boFactibilidad = 2;
+                    var boFactibilidad=0;
+
+                    if(cb[2]['Tipo_factibilidad']=="FACTIBILIDAD DIRECTA"){
+                      boFactibilidad = 1;
+                    }else{
+                      boFactibilidad = 2;
+                    }
+
+                    let web = env.WPHP;
+                    window.location= web + '?id_factibilidad='+
+                          cb[1] +
+                          '&bo_factibilidad=' +
+                          boFactibilidad +
+                          '&num_poste='+
+                          cb[2]['Rotulo'] +
+                          '&direccion=' +
+                          cb[2]['Direccion'] +
+                          '&comuna=' +
+                          cb[2]['Comuna'] +
+                          '&empalme=' +
+                          cb[2]['Empalme']+
+                          '&fase=' +
+                          cb[2]['Fase']+
+                          '&tiempoEmpalme=' +
+                          cb[2]['Tiempo_empalme']+
+                          '&potencia=' +
+                          cb[2]['Potencia'] +
+                          '&tipoEmpalme=' +
+                          cb[2]['Tipo_empalme'];
+
+                      window.close();
                   }
 
-                  let web = env.WPHP;
-                  window.location= web + '?id_factibilidad='+
-                        cb[1] +
-                        '&bo_factibilidad=' +
-                        boFactibilidad +
-                        '&num_poste='+
-                        cb[2]['Rotulo'] +
-                        '&direccion=' +
-                        cb[2]['Direccion'] +
-                        '&comuna=' +
-                        cb[2]['Comuna'] +
-                        '&empalme=' +
-                        cb[2]['Empalme']+
-                        '&fase=' +
-                        cb[2]['Fase']+
-                        '&tiempoEmpalme=' +
-                        cb[2]['Tiempo_empalme']+
-                        '&potencia=' +
-                        cb[2]['Potencia'] +
-                        '&tipoEmpalme=' +
-                        cb[2]['Tipo_empalme'];
-
-                    window.close();
 
               //si no fue grabado mostrar que hubo problemas en modal
               }else{
@@ -698,6 +718,18 @@ class App extends React.Component {
         //FACTIBILIDAD ASISTIDA: cuando hay problemas con las zonas
         }else{
           let fArr = [];
+
+          if(this.state.direccion.length>=75){
+            console.log("problemas de dirección en largo.", this.state.direccion.length);
+            this.setState({
+              activeSnackbar: true,
+              snackbarMessage: 'La dirección para la factibilidad excede el largo (75) permitido. No se puede agregar.',  numeroFactibilidad: '',
+              snackbarIcon: 'error'
+            });
+            $(".factigisVE_progressBar").css('display','none');
+            return;
+          }
+
           var myFact = {
             factigisRut: this.state.rut,
             factigisNombre: this.state.nombre,
@@ -725,7 +757,7 @@ class App extends React.Component {
             factigisGeoPoste: this.state.factigisVE_geoPoste,
             factigisGeoDireccion: this.state.factigisVE_geoDireccion,
             factigisSed: this.state.sed,
-            factigisTipoFactibilidad: this.state.tipoFactibilidad,
+            factigisTipoFactibilidad: 'FACTIBILIDAD ASISTIDA',
             factigisAlimentador: this.state.alimentador,
             factigisIDNodo: this.state.idnodo,
             factigisComuna: this.state.comuna,
@@ -773,7 +805,7 @@ class App extends React.Component {
 
                 factigis_addNuevaFactibilidad_especial(myFact, (cb)=>{
                   if(cb[0]){
-                    this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + "ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
+                    this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + " ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
                      $(".factigisVE_progressBar").css('display','none');
 
                     /*this.setState({
@@ -812,31 +844,34 @@ class App extends React.Component {
                          boFactibilidad = 2;
                        }
 
-                       let web = env.WPHP;
-                       window.location= web + '?id_factibilidad='+
+                       if(env.ENVIRONMENT=='PRODUCTION'){
+                         let web = env.WPHP;
+                         window.location= web + '?id_factibilidad='+
 
-                       //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
-                             cb[1] +
-                             '&bo_factibilidad=' +
-                             boFactibilidad +
-                             '&num_poste='+
-                             cb[2]['Rotulo'] +
-                             '&direccion=' +
-                             cb[2]['Direccion'] +
-                             '&comuna=' +
-                             cb[2]['Comuna'] +
-                             '&empalme=' +
-                             cb[2]['Empalme']+
-                             '&fase=' +
-                             cb[2]['Fase']+
-                             '&tiempoEmpalme=' +
-                             cb[2]['Tiempo_empalme']+
-                             '&potencia=' +
-                             cb[2]['Potencia'] +
-                             '&tipoEmpalme=' +
-                             cb[2]['Tipo_empalme'];
+                         //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
+                               cb[1] +
+                               '&bo_factibilidad=' +
+                               boFactibilidad +
+                               '&num_poste='+
+                               cb[2]['Rotulo'] +
+                               '&direccion=' +
+                               cb[2]['Direccion'] +
+                               '&comuna=' +
+                               cb[2]['Comuna'] +
+                               '&empalme=' +
+                               cb[2]['Empalme']+
+                               '&fase=' +
+                               cb[2]['Fase']+
+                               '&tiempoEmpalme=' +
+                               cb[2]['Tiempo_empalme']+
+                               '&potencia=' +
+                               cb[2]['Potencia'] +
+                               '&tipoEmpalme=' +
+                               cb[2]['Tipo_empalme'];
 
-                         window.close();
+                           window.close();
+                       }
+
 
                       //si no fue grabado mostrar que hubo problemas en modal
                   }else{
@@ -872,6 +907,100 @@ class App extends React.Component {
               $(".factigisVE_progressBar").css('display','none');
               return;
           }
+          //Si está dentro de concesión y también dentro de campamentos = Asistida
+          if ($.inArray("campamentos",factArr)>-1) {
+              fArr.push("campamentos");
+                console.log("En zona campamentos");
+
+                this.setState({snackbarMessage: "Procesando factibilidad.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
+
+                factigis_addNuevaFactibilidad_especial(myFact, (cb)=>{
+                  if(cb[0]){
+                    this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + " ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
+                     $(".factigisVE_progressBar").css('display','none');
+
+                    /*this.setState({
+                    open: true,
+                    problemsforAdding: 'La factibilidad  ha sido agregada. Tipo: ' + cb[2]['Tipo_factibilidad'] ,
+                    numeroFactibilidad: 'N°' + cb[1],
+                    btnModalCloseStatus: false
+                    });
+                    */
+
+
+                    //GENERAR CARTA: guardar en cookie los parametros con que fue generada la factibilidad para crear la carta.
+                    /*let usrprfl = cookieHandler.get('usrprfl');
+                    cookieHandler.set('myLetter',[this.state.factigisDireccion + ", " + this.state.factCartaComuna ,
+                      this.state.factigisNombre + " " + this.state.factigisApellido,
+                      usrprfl.NOMBRE_COMPLETO,
+                      cb[1],
+                      usrprfl.CARGO,
+                      usrprfl.LUGAR_DE_TRABAJO,
+                      usrprfl.DEPARTAMENTO,
+                      usrprfl.COMUNA]);
+
+                      window.open("factigisCarta.html");
+                      */
+                       $(".factigisVE_progressBar").css('display','none');
+                       console.log(cb, "devolviendo esto para venta empalme");
+                       console.log("----------");
+                       console.log("id:",cb[1], "tipo fact:", cb[2]['Tipo_factibilidad'], "rotulo:",cb[2]['Rotulo'], "y más...");
+                       console.log("----------");
+
+                       var boFactibilidad=0;
+
+                       if(cb[2]['Tipo_factibilidad']=="FACTIBILIDAD DIRECTA"){
+                         boFactibilidad = 1;
+                       }else{
+                         boFactibilidad = 2;
+                       }
+
+                       if(env.ENVIRONMENT=='PRODUCTION'){
+                         let web = env.WPHP;
+                         window.location= web + '?id_factibilidad='+
+
+                         //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
+                               cb[1] +
+                               '&bo_factibilidad=' +
+                               boFactibilidad +
+                               '&num_poste='+
+                               cb[2]['Rotulo'] +
+                               '&direccion=' +
+                               cb[2]['Direccion'] +
+                               '&comuna=' +
+                               cb[2]['Comuna'] +
+                               '&empalme=' +
+                               cb[2]['Empalme']+
+                               '&fase=' +
+                               cb[2]['Fase']+
+                               '&tiempoEmpalme=' +
+                               cb[2]['Tiempo_empalme']+
+                               '&potencia=' +
+                               cb[2]['Potencia'] +
+                               '&tipoEmpalme=' +
+                               cb[2]['Tipo_empalme'];
+
+                           window.close();
+                       }
+
+
+                      //si no fue grabado mostrar que hubo problemas en modal
+                  }else{
+                    //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
+                    this.setState({snackbarMessage: 'Hubo un problema al agregar la factibilidad', activeSnackbar: true, snackbarIcon: 'error' });
+                    /*this.setState({
+                      open: true,
+                      problemsforAdding: cb[1],  numeroFactibilidad: '',
+                      btnModalCloseStatus: false
+                    });
+                    $("#iframeloadingAdd").hide();
+                    */
+                     $(".factigisVE_progressBar").css('display','none');
+                  }
+                });
+                return;
+          }
+
           /*
           if ($.inArray("restringida",factArr)>-1) {
               fArr.push("restringida");

@@ -23,7 +23,7 @@ function myLayers(){
 
   var serviceMain;
   var serviceURL;
-  
+
   if(env.BUILDFOR=="INTERNA"){
     serviceMain = 'http://gisred.chilquinta/arcgis/';
   }else{
@@ -35,6 +35,7 @@ function myLayers(){
   return {
 
     read_tokenURL(){
+      console.log(serviceMain + "tokens/generateToken");
       return serviceMain + "tokens/generateToken";
     },
 
@@ -103,6 +104,9 @@ function myLayers(){
     },
     read_factigis_addDireccion(){
       return serviceURL + "Mobile/Ingreso_externo_nuevo/FeatureServer/2/applyedits";
+    },
+    read_chqTramos(){
+      return serviceURL + "Chilquinta_006/Tramos_006/MapServer?f=json&token=" + token.read();
     }
   };
 }
