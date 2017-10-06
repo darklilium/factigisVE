@@ -76,7 +76,10 @@ function myLayers(){
         return serviceURL + "PMS/Vialidad/MapServer/0?f=json&token=" + token.read();
     },
     read_campamentos(){
-       return serviceURL + "MANTENIMIENTO/Otras_Capas/MapServer/3?f=json&token=" + token.read();
+       return serviceURL + "MANTENIMIENTO/Otras_Capas/MapServer/4?f=json&token=" + token.read();
+    },
+    read_factigis_restringida(){
+        return serviceURL + "Varios/ZONAS_RESTRICCION/MapServer/0?f=json&token=" + token.read();
     },
     read_chqTramosBT(){
       return serviceURL + "Chilquinta_006/Tramos_006/MapServer/1?f=json&token=" + token.read();

@@ -222,7 +222,7 @@ class App extends React.Component {
         showB: true})
 
       }else{
-          this.setState({snackbarMessage: "Hubo un problema al inicializar la aplicación. Contáctese con el administrador/desarrollador del sistema.", activeSnackbar: true, snackbarIcon: 'error' });
+          this.setState({snackbarMessage: "Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos. ", activeSnackbar: true, snackbarIcon: 'error' });
       }
 
 
@@ -578,6 +578,9 @@ class App extends React.Component {
         if(this.state.zonaConcesion==false){
           factArr.push("concesion");
         }
+        if(this.state.zonaRestringida==false){
+          factArr.push("restringida");
+        }
 
         if(this.state.zonaTransmision==false){
           factArr.push("transmision");
@@ -585,7 +588,7 @@ class App extends React.Component {
 
         //Si no hay problemas de zonas, pasa a factibilidad NORMAL (directa), transitoriamente ya que esto puede cambiar dentro de la función de guardado.
         //FACTIBILIDAD NORMAL
-        console.log("arreglo", factArr);
+        console.log("Problemas zonas encontrados", factArr);
         if(!factArr.length){
           //primeros campos a definir para agregar (se agregan más luego en la otra función addNuevaFactibilidad)
           var myFact = {
@@ -661,54 +664,48 @@ class App extends React.Component {
                   */
 
                   if(env.ENVIRONMENT=='PRODUCTION'){
-                    console.log(cb, "devolviendo esto para venta empalme");
-                    console.log("----------");
-                    console.log("id:",cb[1], "tipo fact:", cb[2]['Tipo_factibilidad'], "rotulo:",cb[2]['Rotulo'], "y más...");
-                    console.log("----------");
+                      console.log(cb, "devolviendo esto para venta empalme");
+                      console.log("----------");
+                      console.log("id:",cb[1], "tipo fact:", cb[2]['Tipo_factibilidad'], "rotulo:",cb[2]['Rotulo'], "y más...");
+                      console.log("----------");
 
-                    var boFactibilidad=0;
+                      var boFactibilidad=0;
 
-                    if(cb[2]['Tipo_factibilidad']=="FACTIBILIDAD DIRECTA"){
-                      boFactibilidad = 1;
-                    }else{
-                      boFactibilidad = 2;
-                    }
+                      if(cb[2]['Tipo_factibilidad']=="FACTIBILIDAD DIRECTA"){
+                        boFactibilidad = 1;
+                      }else{
+                        boFactibilidad = 2;
+                      }
 
-                    let web = env.WPHP;
-                    window.location= web + '?id_factibilidad='+
-                          cb[1] +
-                          '&bo_factibilidad=' +
-                          boFactibilidad +
-                          '&num_poste='+
-                          cb[2]['Rotulo'] +
-                          '&direccion=' +
-                          cb[2]['Direccion'] +
-                          '&comuna=' +
-                          cb[2]['Comuna'] +
-                          '&empalme=' +
-                          cb[2]['Empalme']+
-                          '&fase=' +
-                          cb[2]['Fase']+
-                          '&tiempoEmpalme=' +
-                          cb[2]['Tiempo_empalme']+
-                          '&potencia=' +
-                          cb[2]['Potencia'] +
-                          '&tipoEmpalme=' +
-                          cb[2]['Tipo_empalme'];
+                      let web = env.WPHP;
+                      window.location= web + '?id_factibilidad='+
+                            cb[1] +
+                            '&bo_factibilidad=' +
+                            boFactibilidad +
+                            '&num_poste='+
+                            cb[2]['Rotulo'] +
+                            '&direccion=' +
+                            cb[2]['Direccion'] +
+                            '&comuna=' +
+                            cb[2]['Comuna'] +
+                            '&empalme=' +
+                            cb[2]['Empalme']+
+                            '&fase=' +
+                            cb[2]['Fase']+
+                            '&tiempoEmpalme=' +
+                            cb[2]['Tiempo_empalme']+
+                            '&potencia=' +
+                            cb[2]['Potencia'] +
+                            '&tipoEmpalme=' +
+                            cb[2]['Tipo_empalme'];
 
-                      window.close();
+                        window.close();
                   }
 
 
               //si no fue grabado mostrar que hubo problemas en modal
               }else{
-                /*this.setState({
-                  open: true,
-                  problemsforAdding: 'Hubo un problema al agregar la factibilidad',  numeroFactibilidad: '',
-                  btnModalCloseStatus: false
-                });
-                */
-                  this.setState({snackbarMessage: 'Hubo un problema al agregar la factibilidad', activeSnackbar: true, snackbarIcon: 'error' });
+                  this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
                  $(".factigisVE_progressBar").css('display','none');
               }
 
@@ -876,14 +873,8 @@ class App extends React.Component {
                       //si no fue grabado mostrar que hubo problemas en modal
                   }else{
                     //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
-                    this.setState({snackbarMessage: 'Hubo un problema al agregar la factibilidad', activeSnackbar: true, snackbarIcon: 'error' });
-                    /*this.setState({
-                      open: true,
-                      problemsforAdding: cb[1],  numeroFactibilidad: '',
-                      btnModalCloseStatus: false
-                    });
-                    $("#iframeloadingAdd").hide();
-                    */
+                    this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
+
                      $(".factigisVE_progressBar").css('display','none');
                   }
                 });
@@ -919,28 +910,6 @@ class App extends React.Component {
                     this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + " ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
                      $(".factigisVE_progressBar").css('display','none');
 
-                    /*this.setState({
-                    open: true,
-                    problemsforAdding: 'La factibilidad  ha sido agregada. Tipo: ' + cb[2]['Tipo_factibilidad'] ,
-                    numeroFactibilidad: 'N°' + cb[1],
-                    btnModalCloseStatus: false
-                    });
-                    */
-
-
-                    //GENERAR CARTA: guardar en cookie los parametros con que fue generada la factibilidad para crear la carta.
-                    /*let usrprfl = cookieHandler.get('usrprfl');
-                    cookieHandler.set('myLetter',[this.state.factigisDireccion + ", " + this.state.factCartaComuna ,
-                      this.state.factigisNombre + " " + this.state.factigisApellido,
-                      usrprfl.NOMBRE_COMPLETO,
-                      cb[1],
-                      usrprfl.CARGO,
-                      usrprfl.LUGAR_DE_TRABAJO,
-                      usrprfl.DEPARTAMENTO,
-                      usrprfl.COMUNA]);
-
-                      window.open("factigisCarta.html");
-                      */
                        $(".factigisVE_progressBar").css('display','none');
                        console.log(cb, "devolviendo esto para venta empalme");
                        console.log("----------");
@@ -987,26 +956,80 @@ class App extends React.Component {
                       //si no fue grabado mostrar que hubo problemas en modal
                   }else{
                     //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
-                    this.setState({snackbarMessage: 'Hubo un problema al agregar la factibilidad', activeSnackbar: true, snackbarIcon: 'error' });
-                    /*this.setState({
-                      open: true,
-                      problemsforAdding: cb[1],  numeroFactibilidad: '',
-                      btnModalCloseStatus: false
-                    });
-                    $("#iframeloadingAdd").hide();
-                    */
+                    this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
+
                      $(".factigisVE_progressBar").css('display','none');
                   }
                 });
                 return;
           }
 
-          /*
-          if ($.inArray("restringida",factArr)>-1) {
-              fArr.push("restringida");
-                console.log("En zona restringida");
+
+          //3.10.2015: agregar capa de zona restringida
+            //En concesión y en zona restringida = Ingresar asistida.
+          if($.inArray("restringida",factArr)>-1){
+            console.log("dentro de concesión pero en zona restringida");
+            this.setState({snackbarMessage: "Procesando factibilidad.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
+
+            factigis_addNuevaFactibilidad_especial(myFact, (cb)=>{
+              if(cb[0]){
+                this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + " ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
+                 $(".factigisVE_progressBar").css('display','none');
+
+                   $(".factigisVE_progressBar").css('display','none');
+                   console.log(cb, "devolviendo esto para venta empalme");
+                   console.log("----------");
+                   console.log("id:",cb[1], "tipo fact:", cb[2]['Tipo_factibilidad'], "rotulo:",cb[2]['Rotulo'], "y más...");
+                   console.log("----------");
+
+                   var boFactibilidad=0;
+
+                   if(cb[2]['Tipo_factibilidad']=="FACTIBILIDAD DIRECTA"){
+                     boFactibilidad = 1;
+                   }else{
+                     boFactibilidad = 2;
+                   }
+
+                   if(env.ENVIRONMENT=='PRODUCTION'){
+                     let web = env.WPHP;
+                     window.location= web + '?id_factibilidad='+
+
+                     //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
+                           cb[1] +
+                           '&bo_factibilidad=' +
+                           boFactibilidad +
+                           '&num_poste='+
+                           cb[2]['Rotulo'] +
+                           '&direccion=' +
+                           cb[2]['Direccion'] +
+                           '&comuna=' +
+                           cb[2]['Comuna'] +
+                           '&empalme=' +
+                           cb[2]['Empalme']+
+                           '&fase=' +
+                           cb[2]['Fase']+
+                           '&tiempoEmpalme=' +
+                           cb[2]['Tiempo_empalme']+
+                           '&potencia=' +
+                           cb[2]['Potencia'] +
+                           '&tipoEmpalme=' +
+                           cb[2]['Tipo_empalme'];
+
+                       window.close();
+                   }
+
+
+                  //si no fue grabado mostrar que hubo problemas en modal
+              }else{
+                //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
+                this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
+
+                 $(".factigisVE_progressBar").css('display','none');
+              }
+            });
+            return;
           }
-          */
+
           console.log("Problemas de zonas:", fArr);
         }
 

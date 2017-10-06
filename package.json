@@ -58,7 +58,7 @@
     "webpack-hot-middleware": "~2.12.2"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config webpack.prod.config",
+    "build": "node_modules/.bin/cross-env NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config webpack.prod.config",
     "gulp": "gulp",
     "start": "start npm run dev:server & start npm run gulp",
     "dev:server": "webpack-dev-server --history-api-fallback",

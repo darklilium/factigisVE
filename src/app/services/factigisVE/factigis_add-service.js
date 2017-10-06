@@ -763,10 +763,10 @@ function factigis_addNuevaFactibilidad_especial(factibilidad, callbackadd){
                     });
                   }else{
                     //No cumple algun parámetro.
-                    console.log("no cumple con alguno de estos:", factibilidad.factigisTramo, factibilidad.factigisDistRotMed,factibilidad.factigisPropiedadPoste);
+                    console.log("no cumple con alguno de estos requisitos:", factibilidad.factigisTramo, factibilidad.factigisDistRotMed,factibilidad.factigisPropiedadPoste);
                     let pasar = [];
                     pasar.push(false);
-                    pasar.push(["No cumple con algún parámetro de: tramo (diferente de N/A): "+ factibilidad.factigisTramo + ", distancia rotulo medidor (<21 mts) :" + factibilidad.factigisDistRotMed + " o propiedad del poste (empresa): " + factibilidad.factigisPropiedadPoste]);
+                    pasar.push(["No cumple con algún parámetro de: tramo (diferente de N/A): "+ factibilidad.factigisTramo + ", distancia rotulo medidor (<30 mts) :" + factibilidad.factigisDistRotMed + " o propiedad del poste (empresa): " + factibilidad.factigisPropiedadPoste]);
                     pasar.push([]);
                     return callbackadd(pasar);
                   }
@@ -850,7 +850,7 @@ function factigis_addNuevaFactibilidad_especial(factibilidad, callbackadd){
 
             console.log("Estoy con la siguiente factibilidad en mt",factibilidad.factigisTipoFactibilidad);
 
-            if ( (factibilidad.factigisTramo!='N/A')  && (factibilidad.factigisDistRotMed<21)  && (factibilidad.factigisPropiedadPoste=='Empresa') ){
+            if ( (factibilidad.factigisTramo!='N/A')  && (factibilidad.factigisDistRotMed<30)  && (factibilidad.factigisPropiedadPoste=='Empresa') ){
               console.log(factibilidad.factigisTramo);
               console.log("agregar lo siguiente a arcgis srv", factibilidad);
 
@@ -883,7 +883,7 @@ function factigis_addNuevaFactibilidad_especial(factibilidad, callbackadd){
               console.log("no cumple con alguno de estos:", factibilidad.factigisTramo, factibilidad.factigisDistRotMed,factibilidad.factigisPropiedadPoste);
               let pasar = [];
               pasar.push(false);
-              pasar.push(["No cumple con algún parámetro de: tramo (diferente de N/A): "+ factibilidad.factigisTramo + ", distancia rotulo medidor (<21 mts) :" + factibilidad.factigisDistRotMed + " o propiedad del poste (empresa): " + factibilidad.factigisPropiedadPoste]);
+              pasar.push(["No cumple con algún parámetro de: tramo (diferente de N/A): "+ factibilidad.factigisTramo + ", distancia rotulo medidor (<30 mts) :" + factibilidad.factigisDistRotMed + " o propiedad del poste (empresa): " + factibilidad.factigisPropiedadPoste]);
               pasar.push([]);
               return callbackadd(pasar);
             }

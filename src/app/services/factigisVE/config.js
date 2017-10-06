@@ -1,3 +1,9 @@
+/*
+Compilated(transpilated): 5.10.2017
+factigisVE  : v1.0
+Author: Evelyn Hernandez
+*/
+
 //bUILD LOCAL DESA
 
 /*
@@ -12,14 +18,9 @@ const env = {
   ROOT2: "http://ventasbeta.chilquinta.cl/factigisVE/",
   WPHP: "http://ventasbeta.chilquinta.cl/online/getParametros.php"
 }
-
 */
 
-/*
-Compilated(transpilated): 20.9.2017
-factigisVE  : v0.9.1
-Author: Evelyn Hernandez
-*/
+
 
 
 //BUILD EXTERNA DESA
@@ -38,7 +39,7 @@ const env = {
 }
 */
 //BUILD EXTERNA DESA PARA SERVIDOR DESA
-
+/*
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
@@ -51,10 +52,10 @@ const env = {
   ROOT2: "http://ventasbeta.chilquinta.cl/factigisVE/",
   WPHP: "http://ventasbeta.chilquinta.cl/online/getParametros.php"
 }
+*/
 
+//BUILD EXTERNA PROD PARA VENTA SERVICIOS
 
-//BUILD EXTERNA PROD PARA VENTA SERVICIOS 
-/*
 var env = {
 	  ROOT: "css/",
 	  CSSDIRECTORY: 'css/',
@@ -68,7 +69,7 @@ var env = {
 	  WPHP: "http://ventaservicios.chilquinta.cl/online/getParametros.php"
 	};
 
-*/
+
 /*
 //beta
 const env = {
@@ -97,5 +98,6 @@ const env = {
   BUILDFOR: 'INTERNA'
 }
 */
+
 
 export default env;
