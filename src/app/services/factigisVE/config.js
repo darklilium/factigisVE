@@ -6,7 +6,7 @@ Author: Evelyn Hernandez
 
 //bUILD LOCAL DESA
 
-/*
+
 const env = {
   ROOT: "dist/css/",
   CSSDIRECTORY: 'dist/css/',
@@ -18,7 +18,7 @@ const env = {
   ROOT2: "http://ventasbeta.chilquinta.cl/factigisVE/",
   WPHP: "http://ventasbeta.chilquinta.cl/online/getParametros.php"
 }
-*/
+
 
 
 
@@ -55,7 +55,7 @@ const env = {
 */
 
 //BUILD EXTERNA PROD PARA VENTA SERVICIOS
-
+/*
 var env = {
 	  ROOT: "css/",
 	  CSSDIRECTORY: 'css/',
@@ -68,7 +68,7 @@ var env = {
 	  ROOT2: "http://ventaservicios.chilquinta.cl/factigisVE/",
 	  WPHP: "http://ventaservicios.chilquinta.cl/online/getParametros.php"
 	};
-
+*/
 
 /*
 //beta
