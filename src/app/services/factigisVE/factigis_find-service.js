@@ -1,5 +1,6 @@
 import layers from './layers-service';
 import token from './token-service';
+import cookieHandler from 'cookie-handler';
 
 function crearRectangulo(geometry,delta){
   var rectangulo = new esri.geometry.Polygon(new esri.SpatialReference(geometry.spatialReference));
@@ -80,6 +81,28 @@ function factigis_findTramoBT(geometry, tipo, callback){
 }
 
 function factigis_findTramoMT(geometry, tipo, callback){
+  var empresa_ = cookieHandler.get('emp');
+  var e = '006';
+
+  switch (empresa_) {
+    case 'chilquinta':
+      e = '006'
+    break;
+    case 'litoral':
+      e = '009'
+    break;
+    case 'linares':
+      e = '031'
+    break;
+    case 'parral':
+      e = '032'
+    break;
+    case 'casablanca':
+      e = '028'
+    break;
+
+  }
+
   console.log("buscando en mt 2", tipo);
   var myRectangulo = crearRectangulo(geometry,15);
   var qTaskInterruptions = new esri.tasks.QueryTask(layers.read_chqTramosMT());
@@ -89,8 +112,9 @@ function factigis_findTramoMT(geometry, tipo, callback){
   qInterruptions.outFields=["*"];
   qInterruptions.geometry = myRectangulo;
   qInterruptions.spatialRelationship = esri.tasks.Query.SPATIAL_REL_INTERSECTS;
-  qInterruptions.where = "ARCGIS.DBO.Tramos_MT_006.tipo = '" + tipo + "'";
+  //qInterruptions.where = `ARCGIS.DBO.Tramos_MT_${e}.tipo = '${tipo}'`;
   qTaskInterruptions.execute(qInterruptions, (featureSet)=>{
+    console.log(featureSet,"tramos mt encontrados");
     if(!featureSet.features.length){
       return callback([]);
     }
@@ -122,7 +146,7 @@ function factigis_findTramo(geometry, tramo, tipo , callback){
         let redBT = [];
         redBT.descripcion = bt[0].attributes['descripcion'];
         redBT.tension = 'N/A';
-        redBT.tipoFactibilidad = 'FACTIBILIDAD DIRECTA';
+        redBT.tipoFactibilidad = '';
         return callback(redBT);
       }
     });

@@ -56,7 +56,7 @@ module.exports = {
     host: "127.0.0.1",
     historyApiFallback: true
   },
-  //devtool: 'source-map',
+  devtool: 'source-map',
   postcss: [autoprefixer],
   sassLoader: {
     data: '@import "css/index.scss";',

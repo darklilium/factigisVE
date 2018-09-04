@@ -10,6 +10,7 @@
 }
 */
 import cookiehandler from 'cookie-handler';
+import env from './config';
 
 function token(){
   return {
@@ -27,7 +28,7 @@ function token(){
 function tokenValidator(){
 
   var t = localStorage.getItem('token');
-  const exampleUrl = "http://gisred.chilquinta.cl:5555/arcgis/rest/services/Interrupciones/PO/MapServer";
+  const exampleUrl =  env.SSL+"gisred.chilquinta.cl:6443/arcgis/rest/services/Interrupciones/PO/MapServer";
   const data = {
     token: t,
     f: "json"

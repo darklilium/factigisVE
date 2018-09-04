@@ -2,6 +2,7 @@ import cookieHandler from 'cookie-handler';
 import myLayers from './layers-service';
 import token from './token-service';
 import $ from 'jquery';
+import env from './config';
 
 function factigisLoginVentaWeb(user,pass, callback){
 
@@ -214,8 +215,8 @@ function saveGisredLogin(user, fech, page, mod, tkn){
 }
 
 function getURLParameters(){
-/*
 
+/*
   var user = {
     factigisRut: '17091916-5',
     factigisNombre: 'Eve',
@@ -223,9 +224,14 @@ function getURLParameters(){
     factigisTelefono: '984031884',
     factigisEmail: 'e@live.cl',
     factigis_selectedValueCliente: 'RESIDENCIAL',
-    factigis_selectedValueTipoContribuyente: 'PERSONA NATURAL'
+    factigis_selectedValueTipoContribuyente: 'PERSONA NATURAL',
+    factigis_empresa: 'casablanca'
   }
+
+  cookieHandler.set('empre',user.factigis_empresa);
+  console.log(cookieHandler.get('empre'));
 */
+
   var user = {
     factigisRut: getURLParameter('rutCliente'),
     factigisNombre: getURLParameter('nombre'),
@@ -233,23 +239,17 @@ function getURLParameters(){
     factigisTelefono:  getURLParameter('celular'),
     factigisEmail:  getURLParameter('email'),
     factigis_selectedValueCliente:  getURLParameter('tpResidencia'),
-    factigis_selectedValueTipoContribuyente: getURLParameter('tpCliente')
+    factigis_selectedValueTipoContribuyente: getURLParameter('tpCliente'),
+    factigis_empresa: getURLParameter('empresa')
   }
+
+  cookieHandler.set('empre',user.factigis_empresa);
+  console.log(cookieHandler.get('empre'));
+
 
   return user;
 }
 
-/*
-function initialize() {
-  coordSSEELong = getURLParameter('latSSEE');
-  coordSSEELat = getURLParameter('lonSSEE');
-  nomSSEESelected = getURLParameter('nombreSSEE');
-	customZoom = getURLParameter('zoom');
-  token =  getURLParameter('token');
-
-
-}
-*/
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [,""])[1].replace(/\+/g, '%20')) || null;
 }

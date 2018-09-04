@@ -158,7 +158,14 @@ class App extends React.Component {
       crearDireccion_calle_disabled: false,
 
       factigisVE_geoUbicacionCasa: '',
-      crearDireccion_ubicacion_disabled: false
+      crearDireccion_ubicacion_disabled: false,
+      //2.1.2018: agregando multimempresa
+      factigis_empresa: '',
+
+      //17.7.2018: se agrega nivales de coci1, 2 y 3
+      factigis_coci1: '',
+      factigis_coci2: '',
+      factigis_coci3: ''
     }
   }
 
@@ -184,6 +191,7 @@ class App extends React.Component {
 
         // add layer for pipes
         var layerRotulos = new esri.layers.ArcGISDynamicMapServiceLayer(layers.read_rotulos(),{id:"factigis_rotulos"});
+        console.log(layers.read_rotulos(),"rotulos");
         layerRotulos.setImageFormat("png32");
         layerRotulos.setVisibleLayers([0]);
         var layerDefs = [];
@@ -233,6 +241,7 @@ class App extends React.Component {
     //get url parameters from ventaEmpalme
 
     var up = getURLParameters();
+
     this.setState({
       rut: up.factigisRut,
       nombre: up.factigisNombre,
@@ -254,13 +263,12 @@ class App extends React.Component {
       factigisVE_opcionesEmpalme: tipoEmpalme,
       factigisVE_opcionesFase: tipoMonoTri,
       factigisVE_opcionesPotencia: [],
-      factigisVE_opcionesEdificacion: tipoEdificacion
-
-
-
-
+      factigisVE_opcionesEdificacion: tipoEdificacion,
+      //2.1.2018: agregando multimempresa
+      factigis_empresa: up.factigis_empresa
 
     })
+
   }
 
   handleSelect(index, last){
@@ -624,7 +632,8 @@ class App extends React.Component {
             factigisComuna: this.state.comuna,
             factigisZona: this.state.zona,
             factigisClasificacion: this.state.clasificacion,
-            factigisPropiedadPoste: this.state.propiedadPoste
+            factigisPropiedadPoste: this.state.propiedadPoste,
+            factigisEmpresa: this.state.factigis_empresa
             }
             //se pasan los primeros campos para agregar
             /*  this.setState({
@@ -760,7 +769,8 @@ class App extends React.Component {
             factigisComuna: this.state.comuna,
             factigisZona: this.state.zona,
             factigisClasificacion: this.state.clasificacion,
-            factigisPropiedadPoste: this.state.propiedadPoste
+            factigisPropiedadPoste: this.state.propiedadPoste,
+            factigisEmpresa: this.state.factigis_empresa
           }
           //Si dentro del array de zonas hay problemas
           //Si está fuera de la zona concesión
@@ -843,7 +853,7 @@ class App extends React.Component {
 
                        if(env.ENVIRONMENT=='PRODUCTION'){
                          let web = env.WPHP;
-                         window.location= web + '?id_factibilidad='+
+                         window.location = web + '?id_factibilidad='+
 
                          //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
                                cb[1] +
@@ -926,6 +936,7 @@ class App extends React.Component {
 
                        if(env.ENVIRONMENT=='PRODUCTION'){
                          let web = env.WPHP;
+                         
                          window.location= web + '?id_factibilidad='+
 
                          //window.location='http://ventasbeta.chilquinta.cl/online/getParametros.php?id_factibilidad='+
@@ -1105,13 +1116,15 @@ class App extends React.Component {
                 tramo: featureSetFeatures.descripcion,
 
                 tipoFactibilidad: featureSetFeatures.tipoFactibilidad
+
               });
             }else{
               this.setState({
                 factigisTramoValidator: true,
-                tramo: featureSetFeatures.descripcion,
+                tramo: featureSetFeatures.descripcion/*,
 
                 tipoFactibilidad: featureSetFeatures.tipoFactibilidad
+                */
               });
             }
             // $("#iframeloadingAdd").hide();

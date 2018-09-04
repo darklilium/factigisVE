@@ -7,6 +7,9 @@ import layers from './layers-service';
 import cookieHandler from 'cookie-handler';
 import _ from 'lodash';
 import jQuery from 'jquery';
+import {searchNivelesCoci} from './factigis_searchSGOCertificate';
+
+
 
 /* Potencia disponible = kva - 0,327*N^(-0,203)*N*5
 
@@ -80,7 +83,7 @@ function factigis_addNuevaDireccion(newAddress, newGeometry, callback){
 
 function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
   //Trae los datos preliminares de la factibilidad.
-
+  console.log(factibilidad,"tengo todo esto");
   var fact = {};
   //Si el empalme es BT, se calcula la distancia entre cliente poste y cliente dirección.
     /* Además se calcula la potencia solicitada.
@@ -114,7 +117,9 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
         //calcular potencias: solicitada x cantidad
             factibilidad.factigisPotenciaCalculada = factibilidad.factigisPotencia * factibilidad.factigisCantidadEmpalmes;
         //definir estado de trámite como nuevo
-            factibilidad.factigisEstadoTramite = 'NUEVA';
+        //10.8.2018: ESTADO TRAMITE NUEVA -> EN SOLICITUD
+            //factibilidad.factigisEstadoTramite = 'NUEVA';
+              factibilidad.factigisEstadoTramite = 'EN SOLICITUD';
         //agregar potencia disponible para SED
             buscarCantClienteSED(factibilidad.factigisSed, (cantidadClientes)=>{
               var kva = buscarKVASED(factibilidad.factigisSed, (kva)=>{
@@ -170,6 +175,8 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
                 console.log("agregar lo siguiente a arcgis srv", factibilidad);
 
                 agregarFact(factibilidad,(isDone)=>{
+
+
                 console.log(isDone[0],isDone[1],isDone[2],"valor en agregarFact");
                   if(isDone[0]){
                     console.log("pase ok, devolviendo a callbackadd");
@@ -179,12 +186,14 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
                     pasar.push(isDone[2]);
 
                     let usrprfl = cookieHandler.get('usrprfl');
+                      let empre = cookieHandler.get('empre');
                     let historial = {
                       Estado_tramite:  factibilidad.factigisEstadoTramite,
                       ID_Factibilidad: isDone[1],
                       Fecha_cambio: getFormatedDateNow(),
                       Observacion: "ESTADO INICIAL",
-                      Usuario:  'REACT VENTA EMPALMES WEB USER'
+                      Usuario:  'REACT VENTA EMPALMES WEB USER',
+                      empresa: empre
                       }
                     agregarEstadoHistoria(historial, myhistorialCb =>{
                       console.log("hecho o no el historial",myhistorialCb);
@@ -238,7 +247,9 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
 
         //calcular potencias: solicitada x cantidad
           factibilidad.factigisPotenciaCalculada = factibilidad.factigisPotencia * factibilidad.factigisCantidadEmpalmes;
-          factibilidad.factigisEstadoTramite = 'NUEVA';
+          //factibilidad.factigisEstadoTramite = 'NUEVA';
+          //10.8.2018
+            factibilidad.factigisEstadoTramite = 'EN SOLICITUD';
 
         //Debido a que es MT , la potencia disponible es 0
           let potenciaDisponible = 0.0;
@@ -283,7 +294,9 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
 
         //Se agrega el origen de factibilidad:
           factibilidad.factigisOrigen = 'VENTA WEB';
-
+          factibilidad.coci1 = 0;
+          factibilidad.coci2 = 0;
+          factibilidad.coci3 = 0;
 
           console.log("Estoy con la siguiente factibilidad en mt",factibilidad.factigisTipoFactibilidad);
           console.log("agregar lo siguiente a arcgis srv", factibilidad);
@@ -297,13 +310,14 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
                 pasar.push(isDone[2]);
 
                 let usrprfl = cookieHandler.get('usrprfl');
-
+                let empre = cookieHandler.get('empre');
                 let historial = {
                   Estado_tramite:  factibilidad.factigisEstadoTramite,
                   ID_Factibilidad: isDone[1],
                   Fecha_cambio: getFormatedDateNow(),
                   Observacion: "ESTADO INICIAL",
-                  Usuario:  'VENTA WEB USER DEMO'
+                  Usuario:  'VENTA WEB USER DEMO',
+                  empresa: empre
                   }
                 agregarEstadoHistoria(historial, myhistorialCb =>{
                   console.log("hecho o no el historial",myhistorialCb);
@@ -400,88 +414,203 @@ function agregarFact(f, callback){
     posteFactibilizador = f.factigisRotulo;
   }
 
-  var myAttributes = {
-    Rut : f.factigisRut,
-    Nombre : f.factigisNombre,
-    Apellido : f.factigisApellido,
-    Telefono : f.factigisTelefono,
-    Email: f.factigisEmail,
-    Tipo_cliente : f.factigisTipoCliente,
-    Tipo_contribuyente : f.factigisContribuyente,
-    Rotulo : f.factigisRotulo,
-    Tramo : f.factigisTramo,
-    Empalme :  f.factigisEmpalme,
-    Fase : f.factigisFase,
-    Potencia : f.factigisPotencia,
-    Capacidad_empalme : f.capacidadEmpalme,
-    Capacidad_interruptor : f.capacidadInterruptor,
-    Tiempo_empalme : f.factigisTiempoEmpalme,
-    Tipo_empalme: f.factigisTipoEmpalme,
-    Cantidad_empalme : f.factigisCantidadEmpalmes,
-    ID_Direccion : f.factigisIDDireccion,
-    Direccion: f.factigisDireccion,
-    Zona_campamentos: opcionCampamento,
-    Zona_concesion : opcionConcesion,
-    Zona_restringida : opcionRestringida,
-    Zona_transmision : opcionTransmision,
-    Zona_vialidad : opcionVialidad,
-    Potencia_calculada : f.factigisPotenciaCalculada,
-    DistRotuloMedidor: f.factigisDistRotMed,
-    DistDireccionMedidor : f.factigisDistMedDir,
-    Comuna : f.factigisComuna,
-    Alimentador: f.factigisAlimentador,
-    Idnodo : f.factigisIDNodo,
-    Estado_tramite: f.factigisEstadoTramite,
-    Tipo_factibilidad: f.factigisTipoFactibilidad,
-    Tipo_mejora : f.factigisTipoMejora,
-    Zona : f.factigisZona,
-    Origen_factibilidad : f.factigisOrigen,
-    Sed :f.factigisSed,
-    PotenciaDispSed :f.factigisPotenciaDisponibleSED,
-    Clasificacion: f.factigisClasificacion,
-    Poste_cnx_final : posteFactibilizador
+  //agregar niveles de coci si empalme es BT y sed es diferente a 0
+  console.log(f.factigisSed,"sed?");
+  var sedd = f.factigisSed;
+  f.coci1 = 0;
+  f.coci2 = 0;
+  f.coci3 = 0;
+  var c1 = 0;
+  var c2 = 0;
+  var c3 = 0;
 
-  }
+  if(sedd>0){
+    console.log("buscando nivel de coci");
+    var niv = searchNivelesCoci(sedd)
+    .then(niveles=>{
+      if(niveles.length>0){
+        c1 =  niveles[0].attributes.Coci1fBT;
+        c2 =  niveles[0].attributes.Coci2fBT;
+        c3 =  niveles[0].attributes.Coci3fBT;
+      }
+      console.log(niveles,"tengo niveles de sed", sedd);
+      var myAttributes = {
+        Rut : f.factigisRut,
+        Nombre : f.factigisNombre,
+        Apellido : f.factigisApellido,
+        Telefono : f.factigisTelefono,
+        Email: f.factigisEmail,
+        Tipo_cliente : f.factigisTipoCliente,
+        Tipo_contribuyente : f.factigisContribuyente,
+        Rotulo : f.factigisRotulo,
+        Tramo : f.factigisTramo,
+        Empalme :  f.factigisEmpalme,
+        Fase : f.factigisFase,
+        Potencia : f.factigisPotencia,
+        Capacidad_empalme : f.capacidadEmpalme,
+        Capacidad_interruptor : f.capacidadInterruptor,
+        Tiempo_empalme : f.factigisTiempoEmpalme,
+        Tipo_empalme: f.factigisTipoEmpalme,
+        Cantidad_empalme : f.factigisCantidadEmpalmes,
+        ID_Direccion : f.factigisIDDireccion,
+        Direccion: f.factigisDireccion,
+        Zona_campamentos: opcionCampamento,
+        Zona_concesion : opcionConcesion,
+        Zona_restringida : opcionRestringida,
+        Zona_transmision : opcionTransmision,
+        Zona_vialidad : opcionVialidad,
+        Potencia_calculada : f.factigisPotenciaCalculada,
+        DistRotuloMedidor: f.factigisDistRotMed,
+        DistDireccionMedidor : f.factigisDistMedDir,
+        Comuna : f.factigisComuna,
+        Alimentador: f.factigisAlimentador,
+        Idnodo : f.factigisIDNodo,
+        Estado_tramite: f.factigisEstadoTramite,
+        Tipo_factibilidad: f.factigisTipoFactibilidad,
+        Tipo_mejora : f.factigisTipoMejora,
+        Zona : f.factigisZona,
+        Origen_factibilidad : f.factigisOrigen,
+        Sed :f.factigisSed,
+        PotenciaDispSed :f.factigisPotenciaDisponibleSED,
+        Clasificacion: f.factigisClasificacion,
+        Poste_cnx_final : posteFactibilizador,
+        empresa: f.factigisEmpresa,
+        Coci1f: c1,
+        Coci2f: c2,
+        Coci3f: c3
+        }
+        console.log("agregando...",myAttributes);
 
-  console.log("agregando...",myAttributes);
+        let geox = f.factigisGeoCliente.x;
+        let geoy=  f.factigisGeoCliente.y;
 
-  let geox = f.factigisGeoCliente.x;
-  let geoy=  f.factigisGeoCliente.y;
+        const data = {
+          f: 'json',
+          adds: JSON.stringify([{ "attributes": myAttributes, geometry: {"x":geox , "y": geoy}}]),
+          token: token.read()
+        };
 
-  const data = {
-    f: 'json',
-    adds: JSON.stringify([{ "attributes": myAttributes, geometry: {"x":geox , "y": geoy}}]),
-    token: token.read()
-  };
+        jQuery.ajax({
+          method: 'POST',
+          url: layers.read_factigis_addFactibilidad(),
+          dataType:'html',
+          data: data
+        })
+        .done(d =>{
+          let json = JSON.parse(d);
+          console.log(d);
+          let arrObject = [];
 
-  jQuery.ajax({
-    method: 'POST',
-    url: layers.read_factigis_addFactibilidad(),
-    dataType:'html',
-    data: data
-  })
-  .done(d =>{
-    let json = JSON.parse(d);
-    console.log(d);
-    let arrObject = [];
+          if(json["addResults"][0].objectId>0){
+            arrObject.push(true);
+            arrObject.push(json["addResults"][0].objectId);
+            arrObject.push(myAttributes);
+            return callback(arrObject);
+          }else{
+            arrObject.push(false);
+            arrObject.push(json["addResults"][0].objectId);
+            arrObject.push([]);
+            return callback(arrObject);
 
-    if(json["addResults"][0].objectId>0){
-      arrObject.push(true);
-      arrObject.push(json["addResults"][0].objectId);
-      arrObject.push(myAttributes);
-      return callback(arrObject);
-    }else{
-      arrObject.push(false);
-      arrObject.push(json["addResults"][0].objectId);
-      arrObject.push([]);
-      return callback(arrObject);
+          }
+        })
+        .fail(f=>{
+          console.log(f,"no pase")
+          callback(false)
+        });
+      }).catch(error=>{
+        console.log(error,"errores buscando niveles de sed");
+      })
+
+  } else{
+    var myAttributes = {
+      Rut : f.factigisRut,
+      Nombre : f.factigisNombre,
+      Apellido : f.factigisApellido,
+      Telefono : f.factigisTelefono,
+      Email: f.factigisEmail,
+      Tipo_cliente : f.factigisTipoCliente,
+      Tipo_contribuyente : f.factigisContribuyente,
+      Rotulo : f.factigisRotulo,
+      Tramo : f.factigisTramo,
+      Empalme :  f.factigisEmpalme,
+      Fase : f.factigisFase,
+      Potencia : f.factigisPotencia,
+      Capacidad_empalme : f.capacidadEmpalme,
+      Capacidad_interruptor : f.capacidadInterruptor,
+      Tiempo_empalme : f.factigisTiempoEmpalme,
+      Tipo_empalme: f.factigisTipoEmpalme,
+      Cantidad_empalme : f.factigisCantidadEmpalmes,
+      ID_Direccion : f.factigisIDDireccion,
+      Direccion: f.factigisDireccion,
+      Zona_campamentos: opcionCampamento,
+      Zona_concesion : opcionConcesion,
+      Zona_restringida : opcionRestringida,
+      Zona_transmision : opcionTransmision,
+      Zona_vialidad : opcionVialidad,
+      Potencia_calculada : f.factigisPotenciaCalculada,
+      DistRotuloMedidor: f.factigisDistRotMed,
+      DistDireccionMedidor : f.factigisDistMedDir,
+      Comuna : f.factigisComuna,
+      Alimentador: f.factigisAlimentador,
+      Idnodo : f.factigisIDNodo,
+      Estado_tramite: f.factigisEstadoTramite,
+      Tipo_factibilidad: f.factigisTipoFactibilidad,
+      Tipo_mejora : f.factigisTipoMejora,
+      Zona : f.factigisZona,
+      Origen_factibilidad : f.factigisOrigen,
+      Sed :f.factigisSed,
+      PotenciaDispSed :f.factigisPotenciaDisponibleSED,
+      Clasificacion: f.factigisClasificacion,
+      Poste_cnx_final : posteFactibilizador,
+      empresa: f.factigisEmpresa,
+      Coci1f: 0,
+      Coci2f: 0,
+      Coci3f: 0
 
     }
-  })
-  .fail(f=>{
-    console.log(f,"no pase")
-    callback(false)
-  });
+
+    console.log("agregando...",myAttributes);
+
+    let geox = f.factigisGeoCliente.x;
+    let geoy=  f.factigisGeoCliente.y;
+
+    const data = {
+      f: 'json',
+      adds: JSON.stringify([{ "attributes": myAttributes, geometry: {"x":geox , "y": geoy}}]),
+      token: token.read()
+    };
+
+    jQuery.ajax({
+      method: 'POST',
+      url: layers.read_factigis_addFactibilidad(),
+      dataType:'html',
+      data: data
+    })
+    .done(d =>{
+      let json = JSON.parse(d);
+      console.log(d);
+      let arrObject = [];
+
+      if(json["addResults"][0].objectId>0){
+        arrObject.push(true);
+        arrObject.push(json["addResults"][0].objectId);
+        arrObject.push(myAttributes);
+        return callback(arrObject);
+      }else{
+        arrObject.push(false);
+        arrObject.push(json["addResults"][0].objectId);
+        arrObject.push([]);
+        return callback(arrObject);
+
+      }
+    })
+    .fail(f=>{
+      console.log(f,"no pase")
+      callback(false)
+    });
+  }
+
 
 
 }
@@ -530,101 +659,243 @@ function agregarFactEspecial(f, callback){
     posteFactibilizador = f.factigisRotulo;
   }
 
+  console.log(f.factigisSed,"sed?");
+  var sedd = f.factigisSed;
+  f.coci1 = 0;
+  f.coci2 = 0;
+  f.coci3 = 0;
 
-  var myAttributes = {
-    Rut : f.factigisRut,
-    Nombre : f.factigisNombre,
-    Apellido : f.factigisApellido,
-    Telefono : f.factigisTelefono,
-    Email: f.factigisEmail,
-    Tipo_cliente : f.factigisTipoCliente,
-    Tipo_contribuyente : f.factigisContribuyente,
-    Rotulo : f.factigisRotulo,
-    Tramo : f.factigisTramo,
-    Empalme :  f.factigisEmpalme,
-    Fase : f.factigisFase,
-    Potencia : f.factigisPotencia,
-    Capacidad_empalme : f.capacidadEmpalme,
-    Capacidad_interruptor : f.capacidadInterruptor,
-    Tiempo_empalme : f.factigisTiempoEmpalme,
-    Tipo_empalme: f.factigisTipoEmpalme,
-    Cantidad_empalme : f.factigisCantidadEmpalmes,
-    ID_Direccion : f.factigisIDDireccion,
-    Direccion: f.factigisDireccion,
-    Zona_campamentos: opcionCampamento,
-    Zona_concesion : opcionConcesion,
-    Zona_restringida : opcionRestringida,
-    Zona_transmision : opcionTransmision,
-    Zona_vialidad : opcionVialidad,
-    Potencia_calculada : f.factigisPotenciaCalculada,
-    DistRotuloMedidor: f.factigisDistRotMed,
-    DistDireccionMedidor : f.factigisDistMedDir,
-    Comuna : f.factigisComuna,
-    Alimentador: f.factigisAlimentador,
-    Idnodo : f.factigisIDNodo,
-    Estado_tramite: f.factigisEstadoTramite,
-    Tipo_factibilidad: f.factigisTipoFactibilidad,
-    Tipo_mejora : f.factigisTipoMejora,
-    Zona : f.factigisZona,
-    Origen_factibilidad : f.factigisOrigen,
-    Sed :f.factigisSed,
-    PotenciaDispSed :f.factigisPotenciaDisponibleSED,
-    Clasificacion: f.factigisClasificacion,
-    Poste_cnx_final : posteFactibilizador
+  var c1 = 0;
+  var c2 = 0;
+  var c3 = 0;
 
-  }
+  if(sedd>0){
+    console.log("buscando nivel de coci");
+    var niv = searchNivelesCoci(sedd)
+      .then(niveles=>{
 
-  console.log("agregando especial...",myAttributes);
+        if(niveles.length>0){
+          c1 = niveles[0].attributes.Coci1fBT;
+          c2 = niveles[0].attributes.Coci2fBT;
+          c3 = niveles[0].attributes.Coci3fBT;
+        }
+        console.log(niveles,"tengo niveles de sed", sedd);
+        var myAttributes = {
+          Rut : f.factigisRut,
+          Nombre : f.factigisNombre,
+          Apellido : f.factigisApellido,
+          Telefono : f.factigisTelefono,
+          Email: f.factigisEmail,
+          Tipo_cliente : f.factigisTipoCliente,
+          Tipo_contribuyente : f.factigisContribuyente,
+          Rotulo : f.factigisRotulo,
+          Tramo : f.factigisTramo,
+          Empalme :  f.factigisEmpalme,
+          Fase : f.factigisFase,
+          Potencia : f.factigisPotencia,
+          Capacidad_empalme : f.capacidadEmpalme,
+          Capacidad_interruptor : f.capacidadInterruptor,
+          Tiempo_empalme : f.factigisTiempoEmpalme,
+          Tipo_empalme: f.factigisTipoEmpalme,
+          Cantidad_empalme : f.factigisCantidadEmpalmes,
+          ID_Direccion : f.factigisIDDireccion,
+          Direccion: f.factigisDireccion,
+          Zona_campamentos: opcionCampamento,
+          Zona_concesion : opcionConcesion,
+          Zona_restringida : opcionRestringida,
+          Zona_transmision : opcionTransmision,
+          Zona_vialidad : opcionVialidad,
+          Potencia_calculada : f.factigisPotenciaCalculada,
+          DistRotuloMedidor: f.factigisDistRotMed,
+          DistDireccionMedidor : f.factigisDistMedDir,
+          Comuna : f.factigisComuna,
+          Alimentador: f.factigisAlimentador,
+          Idnodo : f.factigisIDNodo,
+          Estado_tramite: f.factigisEstadoTramite,
+          Tipo_factibilidad: f.factigisTipoFactibilidad,
+          Tipo_mejora : f.factigisTipoMejora,
+          Zona : f.factigisZona,
+          Origen_factibilidad : f.factigisOrigen,
+          Sed :f.factigisSed,
+          PotenciaDispSed :f.factigisPotenciaDisponibleSED,
+          Clasificacion: f.factigisClasificacion,
+          Poste_cnx_final : posteFactibilizador,
+          empresa: f.factigisEmpresa,
+          Coci1f: c1,
+          Coci2f: c2,
+          Coci3f: c3
 
-  let geox = f.factigisGeoCliente.x;
-  let geoy=  f.factigisGeoCliente.y;
+        }
 
-  const data = {
-    f: 'json',
-    adds: JSON.stringify([{ "attributes": myAttributes, geometry: {"x":geox , "y": geoy}}]),
-    token: token.read()
-  };
+        console.log("agregando especial...",myAttributes);
 
-  jQuery.ajax({
-    method: 'POST',
-    url: layers.read_factigis_addFactibilidad(),
-    dataType:'html',
-    data: data
-  })
-  .done(d =>{
-    let json = JSON.parse(d);
-    console.log(d);
-    let arrObject = [];
+        let geox = f.factigisGeoCliente.x;
+        let geoy=  f.factigisGeoCliente.y;
 
-    if(json["addResults"][0].objectId>0){
-      arrObject.push(true);
-      arrObject.push(json["addResults"][0].objectId);
-      arrObject.push(myAttributes);
-      return callback(arrObject);
-    }else{
-      arrObject.push(false);
-      arrObject.push(json["addResults"][0].objectId);
-      arrObject.push([]);
-      return callback(arrObject);
+        const data = {
+          f: 'json',
+          adds: JSON.stringify([{ "attributes": myAttributes, geometry: {"x":geox , "y": geoy}}]),
+          token: token.read()
+        };
+
+        jQuery.ajax({
+          method: 'POST',
+          url: layers.read_factigis_addFactibilidad(),
+          dataType:'html',
+          data: data
+        })
+        .done(d =>{
+          let json = JSON.parse(d);
+          console.log(d);
+          let arrObject = [];
+
+          if(json["addResults"][0].objectId>0){
+            arrObject.push(true);
+            arrObject.push(json["addResults"][0].objectId);
+            arrObject.push(myAttributes);
+            return callback(arrObject);
+          }else{
+            arrObject.push(false);
+            arrObject.push(json["addResults"][0].objectId);
+            arrObject.push([]);
+            return callback(arrObject);
+
+          }
+        })
+        .fail(f=>{
+          console.log(f,"no pase")
+          callback(false)
+        });
+
+      }).catch(error=>{
+        console.log(error,"erorres buscando nivel de sed");
+      })
+
+  }else{
+    console.log("no se puede encontrar nivel ce coci en fact especial");
+    var myAttributes = {
+      Rut : f.factigisRut,
+      Nombre : f.factigisNombre,
+      Apellido : f.factigisApellido,
+      Telefono : f.factigisTelefono,
+      Email: f.factigisEmail,
+      Tipo_cliente : f.factigisTipoCliente,
+      Tipo_contribuyente : f.factigisContribuyente,
+      Rotulo : f.factigisRotulo,
+      Tramo : f.factigisTramo,
+      Empalme :  f.factigisEmpalme,
+      Fase : f.factigisFase,
+      Potencia : f.factigisPotencia,
+      Capacidad_empalme : f.capacidadEmpalme,
+      Capacidad_interruptor : f.capacidadInterruptor,
+      Tiempo_empalme : f.factigisTiempoEmpalme,
+      Tipo_empalme: f.factigisTipoEmpalme,
+      Cantidad_empalme : f.factigisCantidadEmpalmes,
+      ID_Direccion : f.factigisIDDireccion,
+      Direccion: f.factigisDireccion,
+      Zona_campamentos: opcionCampamento,
+      Zona_concesion : opcionConcesion,
+      Zona_restringida : opcionRestringida,
+      Zona_transmision : opcionTransmision,
+      Zona_vialidad : opcionVialidad,
+      Potencia_calculada : f.factigisPotenciaCalculada,
+      DistRotuloMedidor: f.factigisDistRotMed,
+      DistDireccionMedidor : f.factigisDistMedDir,
+      Comuna : f.factigisComuna,
+      Alimentador: f.factigisAlimentador,
+      Idnodo : f.factigisIDNodo,
+      Estado_tramite: f.factigisEstadoTramite,
+      Tipo_factibilidad: f.factigisTipoFactibilidad,
+      Tipo_mejora : f.factigisTipoMejora,
+      Zona : f.factigisZona,
+      Origen_factibilidad : f.factigisOrigen,
+      Sed :f.factigisSed,
+      PotenciaDispSed :f.factigisPotenciaDisponibleSED,
+      Clasificacion: f.factigisClasificacion,
+      Poste_cnx_final : posteFactibilizador,
+      empresa: f.factigisEmpresa,
+      Coci1f: 0,
+      Coci2f: 0,
+      Coci3f: 0
 
     }
-  })
-  .fail(f=>{
-    console.log(f,"no pase")
-    callback(false)
-  });
+
+    console.log("agregando especial...",myAttributes);
+
+    let geox = f.factigisGeoCliente.x;
+    let geoy=  f.factigisGeoCliente.y;
+
+    const data = {
+      f: 'json',
+      adds: JSON.stringify([{ "attributes": myAttributes, geometry: {"x":geox , "y": geoy}}]),
+      token: token.read()
+    };
+
+    jQuery.ajax({
+      method: 'POST',
+      url: layers.read_factigis_addFactibilidad(),
+      dataType:'html',
+      data: data
+    })
+    .done(d =>{
+      let json = JSON.parse(d);
+      console.log(d);
+      let arrObject = [];
+
+      if(json["addResults"][0].objectId>0){
+        arrObject.push(true);
+        arrObject.push(json["addResults"][0].objectId);
+        arrObject.push(myAttributes);
+        return callback(arrObject);
+      }else{
+        arrObject.push(false);
+        arrObject.push(json["addResults"][0].objectId);
+        arrObject.push([]);
+        return callback(arrObject);
+
+      }
+    })
+    .fail(f=>{
+      console.log(f,"no pase")
+      callback(false)
+    });
+
+  }
 
 
 }
 
 
 function buscarCantClienteSED(sed, callback){
+  var empresa_ = cookieHandler.get('empre');
+  var e = '006';
+
+  switch (empresa_) {
+    case 'chilquinta':
+      e = '006'
+    break;
+    case 'litoral':
+      e = '009'
+    break;
+    case 'linares':
+      e = '031'
+    break;
+    case 'parral':
+      e = '032'
+    break;
+    case 'casablanca':
+      e = '028'
+    break;
+
+  }
+
   console.log("hola", sed)
   var qTaskCC = new esri.tasks.QueryTask(layers.read_layer_nisInfo());
   var qCC = new esri.tasks.Query();
-
-  qCC.where = "ARCGIS.dbo.CLIENTES_DATA_DATOS_006.resp_id_sed='"+ sed + "'";
+  console.log(`ARCGIS.dbo.CLIENTES_DATA_DATOS_${e}.resp_id_sed='${sed}'`);
+  qCC.where = `ARCGIS.dbo.CLIENTES_DATA_DATOS_${e}.resp_id_sed='${sed}'`;
   qTaskCC.executeForCount(qCC, (featureSet)=>{
+    console.log(featureSet,"cant clientes");
     return callback(featureSet);
 
   }, (Errorq)=>{
@@ -691,7 +962,9 @@ function factigis_addNuevaFactibilidad_especial(factibilidad, callbackadd){
           //calcular potencias: solicitada x cantidad
               factibilidad.factigisPotenciaCalculada = factibilidad.factigisPotencia * factibilidad.factigisCantidadEmpalmes;
           //definir estado de trámite como nuevo
-              factibilidad.factigisEstadoTramite = 'NUEVA';
+              //factibilidad.factigisEstadoTramite = 'NUEVA';
+          //10.8.2018: Modificación de estado tramite: 'NUEVA -> EN SOLICITUD'
+          factibilidad.factigisEstadoTramite = 'EN SOLICITUD';
           //agregar potencia disponible para SED
               buscarCantClienteSED(factibilidad.factigisSed, (cantidadClientes)=>{
                 var kva = buscarKVASED(factibilidad.factigisSed, (kva)=>{
@@ -743,12 +1016,14 @@ function factigis_addNuevaFactibilidad_especial(factibilidad, callbackadd){
                         pasar.push(isDone[2]);
 
                         let usrprfl = cookieHandler.get('usrprfl');
+                          let empre = cookieHandler.get('empre');
                         let historial = {
                           Estado_tramite:  factibilidad.factigisEstadoTramite,
                           ID_Factibilidad: isDone[1],
                           Fecha_cambio: getFormatedDateNow(),
                           Observacion: "ESTADO INICIAL",
-                          Usuario:  'REACT VENTA EMPALMES WEB USER'
+                          Usuario:  'REACT VENTA EMPALMES WEB USER',
+                          empresa: empre
                           }
                         agregarEstadoHistoria(historial, myhistorialCb =>{
                           console.log("hecho o no el historial",myhistorialCb);

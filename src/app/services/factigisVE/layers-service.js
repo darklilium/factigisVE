@@ -3,7 +3,10 @@ import myinfotemplate from '../../utils/infoTemplates';
 import mymap from './map-service';
 import {ap_infoWindow} from '../../utils/makeInfowindow';
 import env from './config';
+import {getURLParameters} from './parameters';
+import cookieHandler from 'cookie-handler';
 
+var empresa_= 'chilquinta';
 
 function getMapLayers() {
   var map = mymap.getMap();
@@ -14,21 +17,13 @@ function getMapLayers() {
 }
 
 function myLayers(){
-  //const serviceMain = 'http://gisred.chilquinta/arcgis/';
-  //change this for external connection:
-  //Cambios v0.6.1 prod factigisVE 31.03.2017
-  //const serviceMain = 'http://gisred.chilquinta.cl:5555/arcgis/';
-  //const serviceURL = serviceMain + 'rest/services/';
-  //var graphicLayer = new GraphicsLayer;
-
   var serviceMain;
   var serviceURL;
 
   if(env.BUILDFOR=="INTERNA"){
-    serviceMain = 'http://gisred.chilquinta/arcgis/';
+    serviceMain = env.SSL+'gisredint.chilquinta.cl/arcgis/';
   }else{
-    serviceMain = 'http://gisred.chilquinta.cl:5555/arcgis/';
-
+    serviceMain =  env.SSL+'gisred.chilquinta.cl:6443/arcgis/';
   }
    serviceURL = serviceMain + 'rest/services/';
   //check 8 and last one
@@ -38,7 +33,6 @@ function myLayers(){
       console.log(serviceMain + "tokens/generateToken");
       return serviceMain + "tokens/generateToken";
     },
-
     read_direccionesDyn(){
      return serviceURL + "Cartografia/DMPS/MapServer?f=json&token=" + token.read();
     },
@@ -46,7 +40,30 @@ function myLayers(){
      return serviceURL + "Mobile/Ingreso_externo_nuevo/MapServer?f=json&token=" + token.read();
     },
     read_rotulos(){
-      return serviceURL + "Chilquinta_006/Nodos_006/MapServer?f=json&token=" + token.read();
+    //  return serviceURL + "Chilquinta_006/Nodos_006/MapServer?f=json&token=" + token.read();
+
+
+      empresa_ = cookieHandler.get('empre');
+      console.log("empresa obtenida read_rotulos", empresa_);
+      switch (empresa_) {
+          case 'chilquinta':
+            return serviceURL + "Chilquinta_006/Nodos_006/MapServer?f=json&token=" + token.read();
+          break;
+          case 'litoral':
+            return serviceURL + "Chilquinta_009/Nodos_009/MapServer?f=json&token=" + token.read();
+          break;
+          case 'linares':
+            return serviceURL + "Chilquinta_031/Nodos_031/MapServer?f=json&token=" + token.read();
+          break;
+          case 'parral':
+            return serviceURL + "Chilquinta_032/Nodos_032/MapServer?f=json&token=" + token.read();
+          break;
+          case 'casablanca':
+            return serviceURL + "Chilquinta_028/Nodos_028/MapServer?f=json&token=" + token.read();
+          break;
+
+      }
+
     },
 
     read_direcciones(){
@@ -61,7 +78,28 @@ function myLayers(){
          return serviceURL + "Mobile/Ingreso_externo_nuevo/FeatureServer/2?f=json&token=" + token.read();
     },
     read_rotulos2(){
-      return serviceURL + "Chilquinta_006/Nodos_006/MapServer/0?f=json&token=" + token.read();
+      //return serviceURL + "Chilquinta_006/Nodos_006/MapServer/0?f=json&token=" + token.read();
+
+      empresa_ = cookieHandler.get('empre');
+      console.log("empresa obtenida read_rotulos2", empresa_);
+      switch (empresa_) {
+          case 'chilquinta':
+            return serviceURL + "Chilquinta_006/Nodos_006/MapServer/0?f=json&token=" + token.read();
+          break;
+          case 'litoral':
+            return serviceURL + "Chilquinta_009/Nodos_009/MapServer/0?f=json&token=" + token.read();
+          break;
+          case 'linares':
+            return serviceURL + "Chilquinta_031/Nodos_031/MapServer/0?f=json&token=" + token.read();
+          break;
+          case 'parral':
+            return serviceURL + "Chilquinta_032/Nodos_032/MapServer/0?f=json&token=" + token.read();
+          break;
+          case 'casablanca':
+            return serviceURL + "Chilquinta_028/Nodos_028/MapServer/0?f=json&token=" + token.read();
+          break;
+
+      }
     },
     read_comuna(){
         return serviceURL + "MapaBase/MapServer/4?f=json&token=" + token.read();
@@ -70,7 +108,28 @@ function myLayers(){
         return serviceURL + "Varios/FACTIBILIDAD/MapServer/0?f=json&token=" + token.read();
     },
     read_factigis_distribucion(){
-        return serviceURL + "Chilquinta_006/Concesiones006/MapServer/0?f=json&token=" + token.read();
+        //return serviceURL + "Chilquinta_006/Concesiones006/MapServer/0?f=json&token=" + token.read();
+
+        empresa_ = cookieHandler.get('empre');
+        console.log("empresa obtenida read_factigis_distribucion", empresa_);
+
+      switch (empresa_) {
+        case 'chilquinta':
+          return serviceURL + "Chilquinta_006/Concesiones006/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'litoral':
+          return serviceURL + "Chilquinta_009/Concesiones009/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'linares':
+          return serviceURL + "Chilquinta_031/Concesiones031/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'parral':
+          return serviceURL + "Chilquinta_032/Concesiones032/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'casablanca':
+          return serviceURL + "Chilquinta_028/Concesiones028/MapServer/0?f=json&token=" + token.read();
+        break;
+      }
     },
     read_factigis_vialidad(){
         return serviceURL + "PMS/Vialidad/MapServer/0?f=json&token=" + token.read();
@@ -82,16 +141,103 @@ function myLayers(){
         return serviceURL + "Varios/ZONAS_RESTRICCION/MapServer/0?f=json&token=" + token.read();
     },
     read_chqTramosBT(){
-      return serviceURL + "Chilquinta_006/Tramos_006/MapServer/1?f=json&token=" + token.read();
+      //return serviceURL + "Chilquinta_006/Tramos_006/MapServer/1?f=json&token=" + token.read();
+
+      empresa_ = cookieHandler.get('empre');
+      console.log("empresa obtenida bt", empresa_);
+      switch (empresa_) {
+          case 'chilquinta':
+            return serviceURL + "Chilquinta_006/Tramos_006/MapServer/1?f=json&token=" + token.read();
+          break;
+          case 'litoral':
+            return serviceURL + "Chilquinta_009/Tramos_009/MapServer/1?f=json&token=" + token.read();
+          break;
+          case 'linares':
+            return serviceURL + "Chilquinta_031/Tramos_031/MapServer/1?f=json&token=" + token.read();
+          break;
+          case 'parral':
+            return serviceURL + "Chilquinta_032/Tramos_032/MapServer/1?f=json&token=" + token.read();
+          break;
+          case 'casablanca':
+            return serviceURL + "Chilquinta_028/Tramos_028/MapServer/1?f=json&token=" + token.read();
+          break;
+
+      }
     },
     read_chqTramosMT(){
-      return serviceURL + "Chilquinta_006/Tramos_006/MapServer/0?f=json&token=" + token.read();
+      //return serviceURL + "Chilquinta_006/Tramos_006/MapServer/0?f=json&token=" + token.read();
+
+      empresa_ = cookieHandler.get('empre');
+      console.log("empresa obtenida mt", empresa_);
+
+      switch (empresa_) {
+        case 'chilquinta':
+          return serviceURL + "Chilquinta_006/Tramos_006/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'litoral':
+          return serviceURL + "Chilquinta_009/Tramos_009/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'linares':
+          return serviceURL + "Chilquinta_031/Tramos_031/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'parral':
+          return serviceURL + "Chilquinta_032/Tramos_032/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'casablanca':
+          return serviceURL + "Chilquinta_028/Tramos_028/MapServer/0?f=json&token=" + token.read();
+        break;
+      }
     },
     read_layer_nisInfo(){
-      return serviceURL + "Chilquinta_006/ClientesV2/MapServer/0?f=json&token=" + token.read();
+      //return serviceURL + "Chilquinta_006/ClientesV2/MapServer/0?f=json&token=" + token.read();
+
+      empresa_ = cookieHandler.get('empre');
+      console.log("empresa obtenida read_layer_nisInfo", empresa_);
+
+      switch (empresa_) {
+        case 'chilquinta':
+            return serviceURL + "Chilquinta_006/ClientesV2/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'litoral':
+            return serviceURL + "Chilquinta_009/ClientesV2/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'linares':
+            return serviceURL + "Chilquinta_031/ClientesV2/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'parral':
+            return serviceURL + "Chilquinta_032/ClientesV2/MapServer/0?f=json&token=" + token.read();
+        break;
+        case 'casablanca':
+            return serviceURL + "Chilquinta_028/ClientesV2/MapServer/0?f=json&token=" + token.read();
+        break;
+
+      }
+
     },
     read_layer_infoSED(){/*using for getting the sed information and location*/
-      return serviceURL + "Chilquinta_006/Equipos_pto_006/MapServer/1?f=json&token=" + token.read();
+
+      //return serviceURL + "Chilquinta_006/Equipos_pto_006/MapServer/1?f=json&token=" + token.read();
+
+      empresa_ = cookieHandler.get('empre');
+      console.log("empresa obtenida subs", empresa_);
+
+      switch (empresa_) {
+        case 'chilquinta':
+            return serviceURL + "Chilquinta_006/Equipos_pto_006/MapServer/1?f=json&token=" + token.read();
+        break;
+        case 'litoral':
+            return serviceURL + "Chilquinta_009/Equipos_pto_009/MapServer/1?f=json&token=" + token.read();
+        break;
+        case 'linares':
+            return serviceURL + "Chilquinta_031/Equipos_pto_031/MapServer/1?f=json&token=" + token.read();
+        break;
+        case 'parral':
+            return serviceURL + "Chilquinta_032/Equipos_pto_032/MapServer/1?f=json&token=" + token.read();
+        break;
+        case 'casablanca':
+            return serviceURL + "Chilquinta_028/Equipos_pto_028/MapServer/1?f=json&token=" + token.read();
+        break;
+      }
     },
     read_factigis_addEstadoHistoria(){
       return serviceURL + "FACTIBILIDAD/" + env.SAVEAPPLICATIONMODULE + "/FeatureServer/1/applyedits";
@@ -109,7 +255,31 @@ function myLayers(){
       return serviceURL + "Mobile/Ingreso_externo_nuevo/FeatureServer/2/applyedits";
     },
     read_chqTramos(){
-      return serviceURL + "Chilquinta_006/Tramos_006/MapServer?f=json&token=" + token.read();
+      //return serviceURL + "Chilquinta_006/Tramos_006/MapServer?f=json&token=" + token.read();
+
+      empresa_ = cookieHandler.get('empre');
+      console.log("empresa obtenida read_chqTramos", empresa_);
+
+      switch (empresa_) {
+        case 'chilquinta':
+            return serviceURL + "Chilquinta_006/Tramos_006/MapServer?f=json&token=" + token.read();
+        break;
+        case 'litoral':
+            return serviceURL + "Chilquinta_009/Tramos_009/MapServer?f=json&token=" + token.read();
+        break;
+        case 'linares':
+            return serviceURL + "Chilquinta_031/Tramos_031/MapServer?f=json&token=" + token.read();
+        break;
+        case 'parral':
+            return serviceURL + "Chilquinta_032/Tramos_032/MapServer?f=json&token=" + token.read();
+        break;
+        case 'casablanca':
+            return serviceURL + "Chilquinta_028/Tramos_028/MapServer?f=json&token=" + token.read();
+        break;
+      }
+    },
+    read_cortocircuito_sed(){
+      return serviceURL + "FACTIBILIDAD/"+env.SAVEAPPLICATIONMODULE+"/FeatureServer/3?f=json&token=" + token.read();
     }
   };
 }
