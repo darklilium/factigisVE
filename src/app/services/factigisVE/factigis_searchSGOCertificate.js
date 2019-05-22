@@ -32,14 +32,14 @@ function factigis_findSGOCert(idfactibilidad){
 }
 
 
-function searchNivelesCoci(sed){
+function searchNivelesCoci(sed, empresa){
   var promise = new Promise((resolve,reject)=>{
     var qTaskInterruptions = new esri.tasks.QueryTask(layers.read_cortocircuito_sed());
     var qInterruptions = new esri.tasks.Query();
 
     qInterruptions.returnGeometry = false;
     qInterruptions.outFields=["*"];
-    qInterruptions.where = `SED = '${sed}'`;
+    qInterruptions.where =  `SED = '${sed}' and empresa = '${empresa}'`;
 
     qTaskInterruptions.execute(qInterruptions, (featureSet)=>{
       console.log("niveles coci para sed", sed, featureSet.features);

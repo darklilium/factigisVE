@@ -1,13 +1,12 @@
 /*
-Compilated(transpilated): 03.08.2017
-factigisVE  : v1.3d
+Compilated(transpilated): 22.11.2018
+factigisVE  : v1.5d
 Author: Evelyn Hernandez
 */
 
 /*
 NOTA: Do not forget to change the parameters.js file -> getURLParameters function.
-*
-/
+*/
 //bUILD LOCAL DESA
 
 /*
@@ -81,7 +80,7 @@ var env = {
 
 
 
-//BUILD EXTERNA DESA PARA VENTA SERVICIOS
+//BUILD EXTERNA PROD PARA VENTA SERVICIOS
 
 const env = {
   ROOT: "css/",

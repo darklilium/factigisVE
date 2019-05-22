@@ -535,16 +535,13 @@ class App extends React.Component {
   }
 
   onClickAgregarCliente(){
-    $(".factigisVE_progressBar").css('display','flex');
+    var myFact2, myFact = {};
 
-    //$("#iframeloadingAdd").show();
+    $(".factigisVE_progressBar").css('display','flex');
     let tipoProvisorioDefinitivo = 'DEFINITIVO';
     if(this.state.radioEmpalmeProvisorio){
       tipoProvisorioDefinitivo="PROVISORIO";
     }
-
-
-
 
     let txtValidators = {
       rut: this.state.factigisRutValidator,
@@ -599,7 +596,7 @@ class App extends React.Component {
         console.log("Problemas zonas encontrados", factArr);
         if(!factArr.length){
           //primeros campos a definir para agregar (se agregan más luego en la otra función addNuevaFactibilidad)
-          var myFact = {
+          myFact = {
             factigisRut: this.state.rut,
             factigisNombre: this.state.nombre,
             factigisApellido: this.state.apellido,
@@ -625,7 +622,7 @@ class App extends React.Component {
             factigisGeoCliente: this.state.factigisVE_geoCliente,
             factigisGeoPoste: this.state.factigisVE_geoPoste,
             factigisGeoDireccion: this.state.factigisVE_geoDireccion,
-            factigisSed: this.state.sed,
+            factigis_Sed: this.state.sed,
             factigisTipoFactibilidad: this.state.tipoFactibilidad,
             factigisAlimentador: this.state.alimentador,
             factigisIDNodo: this.state.idnodo,
@@ -636,28 +633,27 @@ class App extends React.Component {
             factigisEmpresa: this.state.factigis_empresa
             }
             //se pasan los primeros campos para agregar
-            /*  this.setState({
-              open: true,
-              problemsforAdding: 'Procesando factibilidad, espere un momento'
-            });
-            */
             this.setState({snackbarMessage: "Procesando factibilidad.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
 
-            console.log(myFact,"agregar");
-
+             //26/1/2017: BUG: problemas con las direcciones largas.
+             if(this.state.direccion.length>=75){
+              console.log("problemas de dirección en largo.", this.state.direccion.length);
+              this.setState({
+                activeSnackbar: true,
+                snackbarMessage: 'La dirección para la factibilidad excede el largo (75) permitido. No se puede agregar.',  numeroFactibilidad: '',
+                snackbarIcon: 'error'
+              });
+              $(".factigisVE_progressBar").css('display','none');
+              return;
+            }
+            
             factigis_addNuevaFactibilidad(myFact, (cb)=>{
 
               //si fue grabado se abre modal indicando el tipo de factibilidad y el objectid con el que fue grabado.
               if(cb[0]){
                 this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + ' ha sido agregada. Tipo: ' + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
-                /* this.setState({
-                  open: true,
-                  problemsforAdding: 'La factibilidad  ha sido agregada. Tipo: ' + cb[2]['Tipo_factibilidad'] ,
-                  numeroFactibilidad: 'N°' + cb[1],
-                  btnModalCloseStatus: false
-                });
-                */
-                   $(".factigisVE_progressBar").css('display','none');
+               
+                $(".factigisVE_progressBar").css('display','none');
                 //GENERAR CARTA: guardar en cookie los parametros con que fue generada la factibilidad para crear la carta.
                 /*let usrprfl = cookieHandler.get('usrprfl');
                 cookieHandler.set('myLetter',[this.state.factigisDireccion + ", " + this.state.factCartaComuna ,
@@ -736,7 +732,7 @@ class App extends React.Component {
             return;
           }
 
-          var myFact = {
+          myFact2 = {
             factigisRut: this.state.rut,
             factigisNombre: this.state.nombre,
             factigisApellido: this.state.apellido,
@@ -762,7 +758,7 @@ class App extends React.Component {
             factigisGeoCliente: this.state.factigisVE_geoCliente,
             factigisGeoPoste: this.state.factigisVE_geoPoste,
             factigisGeoDireccion: this.state.factigisVE_geoDireccion,
-            factigisSed: this.state.sed,
+            factigis_Sed: this.state.sed,
             factigisTipoFactibilidad: 'FACTIBILIDAD ASISTIDA',
             factigisAlimentador: this.state.alimentador,
             factigisIDNodo: this.state.idnodo,
@@ -783,61 +779,16 @@ class App extends React.Component {
                 console.log("No agregar porque está dentro de zona transmisión y fuera de concesión");
                 this.setState({snackbarMessage: "Estimado cliente, su solicitud no puede ser ingresada porque se encuentra fuera de nuestra zona de concesión. Contáctese con un ejecutivo en nuestras oficinas comerciales", activeSnackbar: true, snackbarIcon: 'error' });
                  $(".factigisVE_progressBar").css('display','none');
-                /*this.setState({
-                  open: true,
-                  problemsforAdding: 'No se puede agregar porque está dentro de zona transmisión y fuera de concesión',
-                  btnModalCloseStatus: false
-                });
-                $("#iframeloadingAdd").hide();
-                */
                 return;
             //Si está fuera de la zona de transmisión
               }else{
-                //agregar fact especial = asistida
-                //console.log("agregar como fact asistida debido a q está fuera de zona de concesión y fuera de transmision");
-                /*this.setState({
-                  open: true,
-                  problemsforAdding: 'agregar como fact asistida debido a q está fuera de zona de concesión y fuera de transmision',
-                  btnModalCloseStatus: false
-                });
-                */
                 this.setState({snackbarMessage: "Procesando factibilidad.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
-
-                /*this.setState({
-                  open: true,
-                  problemsforAdding: 'Procesando factibilidad, espere un momento'
-                });
-                */
-                console.log(myFact,"agregar a fact especial.");
-
-                factigis_addNuevaFactibilidad_especial(myFact, (cb)=>{
+                
+                factigis_addNuevaFactibilidad_especial(myFact2, (cb)=>{
                   if(cb[0]){
                     this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + " ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
                      $(".factigisVE_progressBar").css('display','none');
 
-                    /*this.setState({
-                    open: true,
-                    problemsforAdding: 'La factibilidad  ha sido agregada. Tipo: ' + cb[2]['Tipo_factibilidad'] ,
-                    numeroFactibilidad: 'N°' + cb[1],
-                    btnModalCloseStatus: false
-                    });
-                    */
-
-
-                    //GENERAR CARTA: guardar en cookie los parametros con que fue generada la factibilidad para crear la carta.
-                    /*let usrprfl = cookieHandler.get('usrprfl');
-                    cookieHandler.set('myLetter',[this.state.factigisDireccion + ", " + this.state.factCartaComuna ,
-                      this.state.factigisNombre + " " + this.state.factigisApellido,
-                      usrprfl.NOMBRE_COMPLETO,
-                      cb[1],
-                      usrprfl.CARGO,
-                      usrprfl.LUGAR_DE_TRABAJO,
-                      usrprfl.DEPARTAMENTO,
-                      usrprfl.COMUNA]);
-
-                      window.open("factigisCarta.html");
-                      */
-                       $(".factigisVE_progressBar").css('display','none');
                        console.log(cb, "devolviendo esto para venta empalme");
                        console.log("----------");
                        console.log("id:",cb[1], "tipo fact:", cb[2]['Tipo_factibilidad'], "rotulo:",cb[2]['Rotulo'], "y más...");
@@ -880,12 +831,10 @@ class App extends React.Component {
                        }
 
 
-                      //si no fue grabado mostrar que hubo problemas en modal
+                  //si no fue grabado mostrar que hubo problemas en modal
                   }else{
-                    //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
                     this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
-
-                     $(".factigisVE_progressBar").css('display','none');
+                    $(".factigisVE_progressBar").css('display','none');
                   }
                 });
                 return;
@@ -898,24 +847,17 @@ class App extends React.Component {
               //en zona transmisión
               console.log("No se puede agregar debido a que está en zona de transmisión, pese a que está dentro de la concesión");
               this.setState({snackbarMessage: 'Estimado cliente, su factibilidad no se puede agregar debido a que está dentro de una zona de transmisión. Para una atención personalizada diríjase a nuestra oficina de atención al cliente.', numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
-              /*this.setState({
-                open: true,
-                problemsforAdding: 'No se puede agregar debido a que está en zona de transmisión, pese a que está dentro de la concesión',
-                btnModalCloseStatus: false
-              });
-              $("#iframeloadingAdd").hide();
-              */
+              
               $(".factigisVE_progressBar").css('display','none');
               return;
           }
           //Si está dentro de concesión y también dentro de campamentos = Asistida
           if ($.inArray("campamentos",factArr)>-1) {
               fArr.push("campamentos");
-                console.log("En zona campamentos");
+              
+              this.setState({snackbarMessage: "Procesando factibilidad.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
 
-                this.setState({snackbarMessage: "Procesando factibilidad.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
-
-                factigis_addNuevaFactibilidad_especial(myFact, (cb)=>{
+                factigis_addNuevaFactibilidad_especial(myFact2, (cb)=>{
                   if(cb[0]){
                     this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + " ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
                      $(".factigisVE_progressBar").css('display','none');
@@ -964,25 +906,22 @@ class App extends React.Component {
                        }
 
 
-                      //si no fue grabado mostrar que hubo problemas en modal
+                  //si no fue grabado mostrar que hubo problemas en modal
                   }else{
-                    //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
-                    this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
-
+                     this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
                      $(".factigisVE_progressBar").css('display','none');
                   }
                 });
                 return;
           }
 
-
           //3.10.2015: agregar capa de zona restringida
-            //En concesión y en zona restringida = Ingresar asistida.
+          //En concesión y en zona restringida = Ingresar asistida.
           if($.inArray("restringida",factArr)>-1){
             console.log("dentro de concesión pero en zona restringida");
             this.setState({snackbarMessage: "Procesando factibilidad.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
 
-            factigis_addNuevaFactibilidad_especial(myFact, (cb)=>{
+            factigis_addNuevaFactibilidad_especial(myFact2, (cb)=>{
               if(cb[0]){
                 this.setState({snackbarMessage: "La factibilidad N° " + cb[1] + " ha sido agregada. Tipo: " + cb[2]['Tipo_factibilidad'], activeSnackbar: true, snackbarIcon: 'done' });
                  $(".factigisVE_progressBar").css('display','none');
@@ -1030,13 +969,12 @@ class App extends React.Component {
                    }
 
 
-                  //si no fue grabado mostrar que hubo problemas en modal
-              }else{
-                //this.setState({snackbarMessage: cb[1], numeroFactibilidad: '', activeSnackbar: true, snackbarIcon: 'cashed' });
-                this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
+                //si no fue grabado mostrar que hubo problemas en modal
+                }else{
+                  this.setState({snackbarMessage: 'Su estudio de factibilidad no fue ingresado porque no cumple con algún parámetro técnico. Por favor contáctese  con uno de nuestros ejecutivos', activeSnackbar: true, snackbarIcon: 'error' });
 
-                 $(".factigisVE_progressBar").css('display','none');
-              }
+                  $(".factigisVE_progressBar").css('display','none');
+                }
             });
             return;
           }
@@ -1047,9 +985,8 @@ class App extends React.Component {
 
       //si falta algun campo que rellenar se muestra una ventana modal.
       }else{
-        //this.setState({openModalValidator: true, problemsforAdding2: 'Por favor ingrese los campos que faltan (en rojo)'});
-        console.log("ingrese campos que faltan", callback2);
         this.setState({snackbarMessage: "Ingrese los campos que faltan de la factibilidad que se encuentran marcados con borde rojo.", activeSnackbar: true, snackbarIcon: 'error' });
+       
         if(this.state.visibilityStyle.selectPotencia.visibility=='hidden'){
           $(".factigisPotencia").css('border-style','initial').css('border-width','0px');
         }
@@ -1473,6 +1410,17 @@ class App extends React.Component {
   }
 
   onClickAgregarDireccion(){
+
+    var myRe = new RegExp(/^([a-zA-Z0-9 _-]+)$/);
+    var dir = this.state.crearDireccion_nombreCalle;
+    var myArray = myRe.exec(this.state.crearDireccion_nombreCalle);
+
+    if(myArray==null){
+      this.setState({snackbarMessage: "Ingrese sólo carácteres válidos para una dirección.", activeSnackbar: true, snackbarIcon: 'alarm' });
+      return;
+    }
+    
+   
     $(".factigisVE_progressBar").css('display','flex');
     this.setState({snackbarMessage: "Procesando dirección.... espere un momento", activeSnackbar: true, snackbarIcon: 'alarm' });
     var mapp = mymap.getMap();
@@ -1592,6 +1540,7 @@ class App extends React.Component {
   onChangePot2(e){
     this.setState({potencia: e});
   }
+
   render() {
     const imgFrame = env.CSSDIRECTORY+"images/ajax-loader.gif";
 
@@ -1724,7 +1673,7 @@ class App extends React.Component {
                 </div>
 
                 <div className="factigisVE_paso">
-                  <Input disabled={this.state.crearDireccion_calle_disabled} className="factigisVE_textfield direccionexTexfield" onChange={this.handleChange.bind(this, 'crearDireccion_nombreCalle')}  type='text' label='* Calle' name='crearDireccion_nombreCalle' value={this.state.crearDireccion_nombreCalle} maxLength={200} />
+                  <Input  disabled={this.state.crearDireccion_calle_disabled} className="factigisVE_textfield direccionexTexfield" onChange={this.handleChange.bind(this, 'crearDireccion_nombreCalle')}  type='text' label='* Calle' name='crearDireccion_nombreCalle' value={this.state.crearDireccion_nombreCalle} maxLength={200} />
                   <Button disabled={this.state.crearDireccion_calle_disabled} onClick={this.onClickCalle.bind(this)}  className="factigisVEDir_btnPaso1" raised icon="confirmation_number"></Button>
                 </div>
               </div>
