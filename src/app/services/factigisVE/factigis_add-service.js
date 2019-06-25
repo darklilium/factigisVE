@@ -117,7 +117,8 @@ function factigis_addNuevaFactibilidad(factibilidad, callbackadd){
             //agregar potencia disponible para SED
             buscarCantClienteSED(factibilidad.factigis_Sed, (cantidadClientes)=>{
               var kva = buscarKVASED(factibilidad.factigis_Sed, (kva)=>{
-                let potenciaDisponible = kva - (0.327 * (Math.pow(cantidadClientes,-0.203))*cantidadClientes*5);
+                //25.06.2019: Modificado factor 5 a 6kWh
+                let potenciaDisponible = kva - (0.327 * (Math.pow(cantidadClientes,-0.203))*cantidadClientes*6);
                 //asignar potencia disponible para SED
                 factibilidad.factigisPotenciaDisponibleSED = potenciaDisponible;
 
@@ -973,7 +974,8 @@ function factigis_addNuevaFactibilidad_especial(factibilidad, callbackadd){
           //agregar potencia disponible para SED
           buscarCantClienteSED(factibilidad.factigis_Sed, (cantidadClientes)=>{
             var kva = buscarKVASED(factibilidad.factigis_Sed, (kva)=>{
-            let potenciaDisponible = kva - (0.327 * (Math.pow(cantidadClientes,-0.203))*cantidadClientes*5);
+            //25.06.2019: Modificado factor 5 a 6kWh
+            let potenciaDisponible = kva - (0.327 * (Math.pow(cantidadClientes,-0.203))*cantidadClientes*6);
             //asignar potencia disponible para SED
             factibilidad.factigisPotenciaDisponibleSED = potenciaDisponible;
 

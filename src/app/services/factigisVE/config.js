@@ -1,6 +1,6 @@
 /*
-Compilated(transpilated): 22.11.2018
-factigisVE  : v1.5d
+Compilated(transpilated): 25.06.2019
+factigisVE  : v1.9p
 Author: Evelyn Hernandez
 */
 
@@ -9,7 +9,7 @@ NOTA: Do not forget to change the parameters.js file -> getURLParameters functio
 */
 //bUILD LOCAL DESA
 
-/*
+
 const env = {
   ROOT: "dist/css/",
   CSSDIRECTORY: 'dist/css/',
@@ -23,7 +23,7 @@ const env = {
   BUILDFOR: 'INTERNA',
   SSL: 'http://'
 }
-*/
+
 
 
 
@@ -81,7 +81,7 @@ var env = {
 
 
 //BUILD EXTERNA PROD PARA VENTA SERVICIOS
-
+/*
 const env = {
   ROOT: "css/",
   CSSDIRECTORY: 'css/',
@@ -95,7 +95,7 @@ const env = {
   WPHP: "http://ventaservicios.pruebas/online/getParametros.php",
   SSL: 'https://'
 }
-
+*/
 
 //bUILD INTERNA PROD
 /*
